@@ -17,9 +17,9 @@ public class Question {
     private int naiveCount;
     private String authorName;
     private String authorAvatarUrlString;
-    private boolean isNaive;
-    private boolean isExciting;
-    private boolean isFavorite;
+    private boolean isNaive = false;
+    private boolean isExciting =false;
+    private boolean isFavorite = false;
 
     public int getId() {
         return id;
@@ -131,5 +131,12 @@ public class Question {
 
     public void setFavorite(boolean favorite) {
         isFavorite = favorite;
+    }
+
+    @Override
+    public String toString() {
+        return "id = "+id+"tittle = "+title+"date = "+date+"recent = "+recent+
+                "answerCount = "+answerCount+"excitingCount = "+excitingCount+"naiveCount = "+naiveCount+
+                "authorName = "+authorName;
     }
 }

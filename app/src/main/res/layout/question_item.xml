@@ -10,7 +10,12 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp">
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -19,11 +24,11 @@
 
             <TextView
                 android:id="@+id/tv_question_title"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="这是标题"
-                android:textSize="20sp" />
+                android:textColor="#000"
+                android:textSize="22sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -32,16 +37,17 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/ima_question_avatar"
+                    android:id="@+id/image_question_avatar"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginRight="10dp"
                     android:src="@color/colorPrimary" />
 
                 <TextView
-                    android:id="@+id/tv_question_username"
+                    android:id="@+id/tv_question_authorname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="#292828"
                     android:text="用户名" />
             </LinearLayout>
 
@@ -49,10 +55,11 @@
                 android:id="@+id/tv_question_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="start"
                 android:layout_marginLeft="10dp"
-                android:lines="3"
                 android:ellipsize="end"
+                android:gravity="start"
+                android:textColor="#ec484848"
+                android:lines="3"
                 android:text="blablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablabla........."
                 android:textSize="15sp" />
 
@@ -82,7 +89,7 @@
                 <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="3" />
+                    android:layout_weight="2.3" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -91,69 +98,75 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="35dp"
+                        android:layout_width="40dp"
                         android:layout_height="wrap_content">
 
                         <ImageView
                             android:id="@+id/image_question_comment"
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
                             android:layout_gravity="end"
                             android:src="@drawable/ic_comment" />
 
                         <TextView
-                            android:id="@+id/image_question_comment_num"
+                            android:id="@+id/tv_question_answer_num"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="2"
+                            android:singleLine="true"
+                            android:text="3"
                             android:textSize="12sp" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="35dp"
+                        android:layout_width="40dp"
                         android:layout_height="match_parent">
 
                         <ImageView
                             android:id="@+id/image_question_exciting"
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:src="@drawable/ic_excited_clicked" />
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:src="@drawable/ic_exciting" />
 
                         <TextView
-                            android:id="@+id/image_question_excited_num"
+                            android:id="@+id/tv_question_exciting_num"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="2"
+                            android:singleLine="true"
+                            android:text="1"
                             android:textSize="12sp" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="35dp"
+                        android:layout_width="40dp"
                         android:layout_height="match_parent">
 
                         <ImageView
                             android:id="@+id/image_question_naive"
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
                             android:src="@drawable/ic_naive" />
 
                         <TextView
-                            android:id="@+id/image_question_naive_num"
+                            android:id="@+id/tv_question_naive_num"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="2"
+                            android:singleLine="true"
+                            android:text="5"
                             android:textSize="12sp" />
                     </LinearLayout>
 
-                    <ImageView
-                        android:id="@+id/image_question_favorite"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:layout_gravity="end"
-                        android:src="@drawable/ic_favorite" />
+                    <LinearLayout
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent">
 
-
+                        <ImageView
+                            android:id="@+id/image_question_favorite"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:src="@drawable/ic_favorite" />
+                    </LinearLayout>
                 </LinearLayout>
+
             </LinearLayout>
 
 
