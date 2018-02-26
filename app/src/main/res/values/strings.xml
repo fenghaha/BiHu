@@ -1,3 +1,15 @@
 <resources>
-    <string name="app_name">BiHu</string>
+    <string name="app_name">逼乎</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+
+    <string name="send">发送</string>
+    <string name="password">密码</string>
+    <string name="sign_in">登录</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+
 </resources>

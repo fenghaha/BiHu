@@ -17,10 +17,11 @@ public class ApiParam {
     public static final String ANSWER_A_QUESTION = "http://bihu.jay86.com/answer.php";
     public static final String GET_ANSWER_LIST = "http://bihu.jay86.com/ getAnswerList.php";
     public static final String ADD_FAVORITE = "http://bihu.jay86.com/favorite.php";
-    public static final String CANCLE_FAVORITE = "http://bihu.jay86.com/cancelFavorite.php";
+    public static final String CANCEL_FAVORITE = "http://bihu.jay86.com/cancelFavorite.php";
     public static final String GET_FAVORITE_LIST = "http://bihu.jay86.com/getFavoriteList.php";
     public static final String ADD_EXCITING = "http://bihu.jay86.com/exciting.php";
-    public static final String CANCLE_EXCITING = "http://bihu.jay86.com/cancelExciting.php";
+    public static final String CANCEL_EXCITING = "http://bihu.jay86.com/cancelExciting.php";
     public static final String ADD_NAIVE = "http://bihu.jay86.com/naive.php";
-    public static final String CANCLE_NAIVE = "http://bihu.jay86.com/cancelNaive.php";
+    public static final String CANCEL_NAIVE = "http://bihu.jay86.com/cancelNaive.php";
+    public static final String GET_TOKEN = "http://119.23.48.151:8080/qiniu/";
 }

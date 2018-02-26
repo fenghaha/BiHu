@@ -1,11 +1,14 @@
 package com.fhh.bihu.entity;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+
 /**
  * 问题实体类
  * Created by FengHaHa on 2018/2/24 0024.
  */
 
-public class Question {
+public class Question implements Serializable{
     private int id;
     private String title;
     private String content;
@@ -17,6 +20,16 @@ public class Question {
     private int naiveCount;
     private String authorName;
     private String authorAvatarUrlString;
+    private ArrayList<String> imageUrlStrings = new ArrayList<>();
+
+    public ArrayList<String> getImageUrlStrings() {
+        return imageUrlStrings;
+    }
+
+    public void addImageUrlStrings(String url) {
+        imageUrlStrings.add(url);
+    }
+
     private boolean isNaive = false;
     private boolean isExciting =false;
     private boolean isFavorite = false;
@@ -135,7 +148,7 @@ public class Question {
 
     @Override
     public String toString() {
-        return "id = "+id+"tittle = "+title+"date = "+date+"recent = "+recent+
+        return "id = "+id+"tittle = "+title+"content = "+content+title+"date = "+date+"recent = "+recent+
                 "answerCount = "+answerCount+"excitingCount = "+excitingCount+"naiveCount = "+naiveCount+
                 "authorName = "+authorName;
     }

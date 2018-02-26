@@ -8,11 +8,8 @@ import android.widget.Toast;
  */
 
 public class ToastUtil {
-    public static void showError(String error) {
-        Toast.makeText(MyApplication.getContext(), error, Toast.LENGTH_LONG).show();
+    public static void makeToast(String content) {
+        Toast.makeText(MyApplication.getContext(), content, Toast.LENGTH_SHORT).show();
     }
 
-    public static void showHint(String result) {
-        Toast.makeText(MyApplication.getContext(), result, Toast.LENGTH_SHORT).show();
-    }
 }
