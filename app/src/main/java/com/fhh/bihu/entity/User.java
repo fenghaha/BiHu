@@ -10,8 +10,7 @@ public class User {
     private int id;
     private String username;
     private String avatarUrl;
-    //TODO 记得删掉
-    private String token = "4642a17dd03233682abf41c3d823cdcd9ff102d6";
+    private String token;
 
     public User() {
     }

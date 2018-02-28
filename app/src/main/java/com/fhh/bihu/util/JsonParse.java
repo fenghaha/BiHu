@@ -63,7 +63,7 @@ public class JsonParse {
                 question.setNaive(one.getBoolean("is_naive"));
                 question.setFavorite(one.getBoolean("is_favorite"));
 
-                Log.d(TAG, "getQuestionList: " + question.toString());
+                //Log.d(TAG, "getQuestionList: " + question.toString());
                 questionList.add(question);
             }
         } catch (JSONException e) {

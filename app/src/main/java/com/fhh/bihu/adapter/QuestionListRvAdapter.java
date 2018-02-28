@@ -1,19 +1,17 @@
 package com.fhh.bihu.adapter;
 
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fhh.bihu.R;
+import com.fhh.bihu.activity.AnswerQuestionActivity;
 import com.fhh.bihu.entity.Question;
-import com.fhh.bihu.entity.User;
 import com.fhh.bihu.util.ApiParam;
 import com.fhh.bihu.util.HttpUtil;
 import com.fhh.bihu.util.JsonParse;
@@ -188,7 +186,7 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     }
 
                     @Override
-                    public void onFail() {
+                    public void onFail(String reason) {
                         ToastUtil.makeToast("你点得太快,网络跟不上了哦");
                     }
                 });
@@ -209,7 +207,7 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     }
 
                     @Override
-                    public void onFail() {
+                    public void onFail(String reason) {
                         ToastUtil.makeToast("你点得太快,网络跟不上了哦");
                     }
                 });
@@ -231,7 +229,7 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     }
 
                     @Override
-                    public void onFail() {
+                    public void onFail(String reason) {
                         ToastUtil.makeToast("你点得太快,网络跟不上了哦");
                     }
                 });
@@ -253,7 +251,7 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     }
 
                     @Override
-                    public void onFail() {
+                    public void onFail(String reason) {
                         ToastUtil.makeToast("你点得太快,网络跟不上了哦");
                     }
                 });
@@ -269,7 +267,8 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         holder.comment.setOnClickListener(v -> {
             int position = holder.getAdapterPosition();
             Question question = mQuestionList.get(position);
-            //TODO 同上
+            Log.d("Intent_que", question.toString());
+            AnswerQuestionActivity.actionStart(v.getContext(),question);
         });
         holder.exciting.setOnClickListener(v -> {
             int position = holder.getAdapterPosition();
@@ -324,7 +323,7 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                             }
 
                             @Override
-                            public void onFail() {
+                            public void onFail(String reason) {
                                 ToastUtil.makeToast("你点得太快,网络跟不上了哦");
                             }
                         });
@@ -339,7 +338,7 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                             }
 
                             @Override
-                            public void onFail() {
+                            public void onFail(String reason) {
                                 ToastUtil.makeToast("你点得太快,网络跟不上了哦");
                             }
                         });
@@ -364,7 +363,7 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         HttpUtil.sendHttpRequest(url, param, new HttpUtil.HttpCallBack() {
             @Override
             public void onSuccess(String data) {
-                Log.d("LOADING", data);
+                //Log.d("LOADING", data);
                 if (data == null || data.equals("null") || data.equals("[]")) {
                     ToastUtil.makeToast("没有更多了");
                     holder.loadingTextView.setText("没有更多了");
@@ -377,7 +376,7 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }
 
             @Override
-            public void onFail() {
+            public void onFail(String reason) {
                 holder.loadingTextView.setText("加载失败");
                 ToastUtil.makeToast("加载失败,请稍后再试");
             }

@@ -1,6 +1,8 @@
 package com.fhh.bihu.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,7 +22,6 @@ import android.view.MenuItem;
 import com.fhh.bihu.R;
 import com.fhh.bihu.adapter.QuestionListRvAdapter;
 import com.fhh.bihu.entity.Question;
-import com.fhh.bihu.entity.User;
 import com.fhh.bihu.util.ApiParam;
 import com.fhh.bihu.util.HttpUtil;
 import com.fhh.bihu.util.JsonParse;
@@ -32,35 +33,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class QuestionListActivity extends AppCompatActivity {
 
 
     private List<Question> mQuestionList = new ArrayList<>();
 
     private SwipeRefreshLayout swipeRefresh;
-    private Toolbar toolbar;
     private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle toggle;
 
-    private RecyclerView recyclerView;
-    private LinearLayoutManager layoutManager;
-    private NavigationView navigationView;
-    private FloatingActionButton button;
     private QuestionListRvAdapter adapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_question_list);
         ToastUtil.makeToast("欢迎来到逼乎!");
-        MyApplication.setUser(new User());
         setUpViews();
         updateQuestions();
     }
 
     //刷新问题列表数据
     private void updateQuestions() {
+        Log.d("刷新时的token", "token = "+MyApplication.getToken());
         swipeRefresh.setRefreshing(true);
         HttpUtil.sendHttpRequest(ApiParam.GET_QUESTION_LIST, "page=0" + "&count=10"
                         + "&token=" + MyApplication.getToken(),
@@ -72,13 +67,13 @@ public class MainActivity extends AppCompatActivity {
                         mQuestionList.addAll(JsonParse.getQuestionList(data));
                         adapter.notifyDataSetChanged();
                         swipeRefresh.setRefreshing(false);
-                        for (Question question : mQuestionList) {
-                            Log.d("DDDFFF", question.toString());
-                        }
+//                        for (Question question : mQuestionList) {
+//                            Log.d("ShowQuestions", question.toString());
+//                        }
                     }
 
                     @Override
-                    public void onFail() {
+                    public void onFail(String reason) {
                         ToastUtil.makeToast("网络错误,刷新失败");
                         swipeRefresh.setRefreshing(false);
                     }
@@ -87,8 +82,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setUpViews() {
+
         //设置Toolbar
-        toolbar = findViewById(R.id.tool_bar);
+        Toolbar toolbar = findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -97,12 +93,12 @@ public class MainActivity extends AppCompatActivity {
 
         //设置DrawerLayout
         drawerLayout = findViewById(R.id.drawer_layout);
-        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0);
         toggle.syncState();
         drawerLayout.addDrawerListener(toggle);
 
         //设置NavigationView
-        navigationView = findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setCheckedItem(R.id.nav_home);
         navigationView.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
@@ -120,7 +116,9 @@ public class MainActivity extends AppCompatActivity {
                     //TODO 修改密码
                     break;
                 case R.id.nav_logout:
-                    //跳转到登陆界面
+                    logout();
+                    LoginActivity.actionStart(QuestionListActivity.this);
+                    finish();
                     break;
 
             }
@@ -128,16 +126,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //设置RecyclerView
-        recyclerView = findViewById(R.id.rv_question_list);
-        layoutManager = new LinearLayoutManager(MainActivity.this);
+        RecyclerView recyclerView = findViewById(R.id.rv_question_list);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(QuestionListActivity.this);
         adapter = new QuestionListRvAdapter(mQuestionList);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
 
         //设置浮动按钮
-        button = findViewById(R.id.fab_ask);
+        FloatingActionButton button = findViewById(R.id.fab_ask);
         button.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, AddQuestionActivity.class);
+            Intent intent = new Intent(QuestionListActivity.this, AddQuestionActivity.class);
             startActivity(intent);
         });
 
@@ -150,6 +148,17 @@ public class MainActivity extends AppCompatActivity {
         swipeRefresh.setColorSchemeResources(R.color.colorAccent);
 
         swipeRefresh.setOnRefreshListener(this::updateQuestions);
+    }
+
+    private void logout() {
+        SharedPreferences pref = getSharedPreferences("account", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+
+        editor.putBoolean("remember_password",true);
+        editor.putString("account", "");
+        editor.putString("password", "");
+        editor.putBoolean("auto_login", false);
+        editor.apply();
     }
 
     @Override

@@ -9,6 +9,7 @@ import com.fhh.bihu.entity.User;
 /**
  * Created by FengHaHa on 2018/2/24 0024.
  * 全局获取Context
+ * 全局获取token
  */
 
 public class MyApplication extends Application {
@@ -26,6 +27,7 @@ public class MyApplication extends Application {
     public static void setUser(User user) {
         mUser = user;
     }
+
 
     public static String getToken() {
         if (mUser != null && mUser.getToken() != null) {

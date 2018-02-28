@@ -4,9 +4,8 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;;
+import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -16,6 +15,7 @@ import com.fhh.bihu.R;
 import com.fhh.bihu.util.ApiParam;
 import com.fhh.bihu.util.HttpUtil;
 import com.fhh.bihu.util.MyApplication;
+import com.fhh.bihu.util.MyTextUtils;
 import com.fhh.bihu.util.ToastUtil;
 
 public class AddQuestionActivity extends AppCompatActivity {
@@ -62,8 +62,9 @@ public class AddQuestionActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.send:
-                if (!TextUtils.isEmpty(mTitle.getText().toString()) &&
-                        !TextUtils.isEmpty(mContent.getText().toString())) {
+                //标题和内容都不为空时 发送
+                if (!MyTextUtils.isEmpty(mTitle.getText().toString()) &&
+                        !MyTextUtils.isEmpty(mContent.getText().toString())) {
 
                     //TODO 实现上传图片
                     String param = "title=" + mTitle.getText().toString()
@@ -76,18 +77,19 @@ public class AddQuestionActivity extends AppCompatActivity {
                             finish();
                         }
 
+
                         @Override
-                        public void onFail() {
+                        public void onFail(String reason) {
                             ToastUtil.makeToast("由于网络原因,发送失败");
                         }
                     });
                 } else {
-                    if (TextUtils.isEmpty(mTitle.getText().toString())){
+                    if (MyTextUtils.isEmpty(mTitle.getText().toString())){
                        mTitle.setError("标题不能为空!");
                     }
 
 
-                    if (TextUtils.isEmpty(mContent.getText().toString()))
+                    if (MyTextUtils.isEmpty(mContent.getText().toString()))
                         ToastUtil.makeToast("内容不能为空");
                 }
                 break;

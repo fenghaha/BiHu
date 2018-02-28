@@ -21,6 +21,7 @@ import java.net.URL;
  */
 
 public class HttpUtil {
+    private static final String TAG = "HttpUtil";
 
     public static void sendHttpRequest(String url, String param, HttpCallBack callBack) {
 
@@ -28,6 +29,7 @@ public class HttpUtil {
         //把开启新线程的操作放在网络请求里
         new Thread(() -> {
             HttpURLConnection connection = null;
+            //Log.d(TAG, "一次网络请求");
             try {
                 URL mUrl = new URL(url);
                 connection = (HttpURLConnection) mUrl.openConnection();
@@ -43,25 +45,25 @@ public class HttpUtil {
                 Log.d("ResponseCode", "ResponseCode = " + connection.getResponseCode());
                 String data = getStringFromIS(connection.getInputStream());
                 if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                    Log.d("data123456", data);
+                    //Log.d("data123456", data);
                     JSONObject json = new JSONObject(data);
                     String info = json.getString("info");
-                    Log.d("6666", String.valueOf("success".equals(info)||"excited".equals(info)||"naive".equals(info)));
+                    Log.d("6666", info);
                     //返回值为200
                     if ("success".equals(info)||"excited".equals(info)||"naive".equals(info)) {
                         Log.d("getInfo", "info =" + info);
                         handler.post(() -> callBack.onSuccess(data));
                     } else {
                         handler.post(() -> {
-                            ToastUtil.makeToast("网络错误__返回" );
-                            callBack.onFail();
+                            
+                            Log.d(TAG, "sendHttpRequest:网络错误__返回值 = "+info);
+                            callBack.onFail("参数");
                         });
                     }
                 } else {
-
                     handler.post(() -> {
-                        ToastUtil.makeToast("网络错误__网络");
-                        callBack.onFail();
+                        ToastUtil.makeToast("网络错误,请检查网络连接");
+                        callBack.onFail("网络");
                     });
                 }
             } catch (MalformedURLException e) {
@@ -93,7 +95,7 @@ public class HttpUtil {
     public interface HttpCallBack {
         public void onSuccess(String data);
 
-        public void onFail();
+        public void onFail(String reason);;
     }
 
 }
