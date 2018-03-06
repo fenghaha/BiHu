@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#fff"
     android:orientation="vertical"
-    tools:context="com.fhh.bihu.activity.AddQuestionActivity">
+    tools:context="com.fhh.bihu.activity.AskQuestionActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/tool_bar"
@@ -51,6 +51,5 @@
         android:background="@null"
         android:gravity="top|start"
         android:hint="添加问题的补充说明"
-        android:maxLength="1000"
         android:textSize="17sp" />
 </LinearLayout>

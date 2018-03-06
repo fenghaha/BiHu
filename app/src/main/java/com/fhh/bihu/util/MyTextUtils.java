@@ -2,6 +2,10 @@ package com.fhh.bihu.util;
 
 import android.text.TextUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by FengHaHa on 2018/2/27 0027.
  * 判断文本是否合法
@@ -10,8 +14,13 @@ import android.text.TextUtils;
  */
 
 public class MyTextUtils {
-    public static boolean isLegal(String text, int minLenth, int maxLEnth) {
 
+
+
+    public static boolean isEqual(String s1,String s2){
+        return s1.equals(s2);
+    }
+    public static boolean isLegal(String text, int minLenth, int maxLEnth) {
         //为空
         if (TextUtils.isEmpty(text) || isAllSpace(text)) {
             return false;
@@ -24,7 +33,9 @@ public class MyTextUtils {
     public static boolean isEmpty(String text) {
         return TextUtils.isEmpty(text) || isAllSpace(text);
     }
-
+    public static boolean isNull(String text) {
+        return text.equals("null")||TextUtils.isEmpty(text) || isAllSpace(text);
+    }
     private static boolean isAllSpace(String text) {
         char temp[] = text.toCharArray();
         for (char aTemp : temp) {

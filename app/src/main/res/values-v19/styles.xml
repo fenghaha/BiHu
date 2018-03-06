@@ -3,6 +3,7 @@
 
     <style name="AppTheme" parent="AppTheme.Base">
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="colorAccent">@color/colorBlue</item>
     </style>
 
     <style name="LoginTheme" parent="AppTheme">
@@ -10,6 +11,8 @@
         <item name="colorAccent">@color/colorWhite</item>
         <item name="colorPrimary">@color/colorPrimary</item>
     </style>
-    <style name="sendTheme" parent="AppTheme.Base"/>
+    <style name="sendTheme" parent="AppTheme.Base">
+        <item name="colorAccent">@color/colorDarkerBlue</item>
+    </style>
 
 </resources>

@@ -10,7 +10,7 @@ public class User {
     private int id;
     private String username;
     private String avatarUrl;
-    private String token;
+    private String token ;
 
     public User() {
     }

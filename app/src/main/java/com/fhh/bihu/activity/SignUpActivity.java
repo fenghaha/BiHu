@@ -26,10 +26,6 @@ public class SignUpActivity extends AppCompatActivity {
     private TextInputLayout passwordLayout;
     private TextInputLayout accountLayout;
 
-    private Button signUpButton;
-    private SharedPreferences pref;
-    private SharedPreferences.Editor editor;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +41,7 @@ public class SignUpActivity extends AppCompatActivity {
         mAccount = findViewById(R.id.input_account);
         mPassword = findViewById(R.id.input_password);
 
-        signUpButton = findViewById(R.id.button_sign_up);
+        Button signUpButton = findViewById(R.id.button_sign_up);
         accountLayout = findViewById(R.id.sign_up_account_layout);
         passwordLayout = findViewById(R.id.sign_up_password_layout);
 
@@ -56,9 +52,9 @@ public class SignUpActivity extends AppCompatActivity {
 
 
     private void saveAccount() {
-        pref = getSharedPreferences("account", Context.MODE_PRIVATE);
+        SharedPreferences pref = getSharedPreferences("account", Context.MODE_PRIVATE);
         //保存注册好的账号密码
-        editor = pref.edit();
+        SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean("remember_password", true);
         editor.putString("account", mAccount.getText().toString());
         editor.putString("password", mPassword.getText().toString());
@@ -85,24 +81,28 @@ public class SignUpActivity extends AppCompatActivity {
 
             //实现注册逻辑
             String param = "username=" + username + "&password=" + password;
-            HttpUtil.sendHttpRequest(ApiParam.REGISTER, param, new HttpUtil.HttpCallBack() {
-                @Override
-                public void onSuccess(String data) {
+            HttpUtil.sendHttpRequest(ApiParam.REGISTER, param,
+                    new HttpUtil.HttpCallBack() {
 
-                    //保存账号密码
-                    saveAccount();
+                        @Override
+                        public void onResponse(HttpUtil.Response response) {
+                            if (response.getInfo().equals("success")) {
+                                //保存账号密码
+                                saveAccount();
+                                //跳转到LoginActivity
+                                finish();
+                            } else {
+                                ToastUtil.makeToast(response.getInfo());
+                            }
+                        }
 
-                    //跳转到LoginActivity
-                    finish();
-                }
-
-                @Override
-                public void onFail(String reason) {
-                    if ("参数".equals(reason)) {
-                        ToastUtil.makeToast("账号密码有误,登录失败");
-                    }
-                }
-            });
+                        @Override
+                        public void onFail(String reason) {
+                            if ("参数".equals(reason)) {
+                                ToastUtil.makeToast("账号密码有误,登录失败");
+                            }
+                        }
+                    });
 
         } else {
             if (!MyTextUtils.isLegal(mAccount.getText().toString(), 2, 10)) {

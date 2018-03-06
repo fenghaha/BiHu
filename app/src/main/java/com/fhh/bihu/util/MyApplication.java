@@ -28,6 +28,9 @@ public class MyApplication extends Application {
         mUser = user;
     }
 
+    public static User getUser() {
+        return mUser;
+    }
 
     public static String getToken() {
         if (mUser != null && mUser.getToken() != null) {

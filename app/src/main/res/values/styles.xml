@@ -12,9 +12,13 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorWhite</item>
     </style>
-    <style name="AppTheme" parent="AppTheme.Base"/>
+    <style name="AppTheme" parent="AppTheme.Base" >
+        <item name="colorAccent">@color/colorBlue</item>
+    </style>
     <style name="MainTheme" parent="AppTheme.Base">
         <item name="colorPrimary">@color/colorBlue</item>
     </style>
-    <style name="sendTheme" parent="AppTheme.Base"/>
+    <style name="sendTheme" parent="AppTheme.Base">
+        <item name="colorAccent">@color/colorDarkerBlue</item>
+    </style>
 </resources>

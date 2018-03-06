@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#fff"
-    tools:context="com.fhh.bihu.activity.AddQuestionActivity">
+    android:orientation="vertical"
+    tools:context="com.fhh.bihu.activity.AskQuestionActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/tool_bar"
@@ -17,40 +17,151 @@
         app:layout_scrollFlags="scroll|enterAlways|snap"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:titleTextColor="#000"
-        app:title="提问" />
-
-    <android.support.design.widget.TextInputLayout
+        app:title="提问"
+        app:titleTextColor="#000" />
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp">
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/text_question_title"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="2"
-            android:hint="请输入标题"
-            android:textSize="21sp" />
+            android:orientation="vertical">
 
-    </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/text_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="5dp"
+                android:hint="请输入标题">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/text_question_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="2"
+                    android:textSize="21sp" />
+            </android.support.design.widget.TextInputLayout>
 
 
+            <EditText
+                android:id="@+id/text_question_content"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="15dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:gravity="top|start"
+                android:hint="添加问题的补充说明"
+                android:textSize="17sp" />
+            <LinearLayout
+                android:id="@+id/answer_all_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
 
-        <EditText
-            android:id="@+id/text_question_content"
+                <ImageView
+                    android:id="@+id/answer_image_0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="10dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/nav_icon"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/answer_image_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/nav_icon"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/answer_image_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="10dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/nav_icon"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/answer_image_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="10dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/nav_icon"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/answer_image_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="10dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/nav_icon"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#fff"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="horizontal">
+        <View
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:maxLines="50"
-            android:layout_margin="15dp"
-            android:background="@null"
-            android:textSize="17sp"
-            android:gravity="top|start"
-            android:hint="添加问题的补充说明"
-            android:inputType="text" />
+            android:layout_height="1dp"
+            android:background="@color/colorGray" />
 
+        <Button
+            android:id="@+id/bt_down"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="15dp"
+            android:background="@drawable/ic_down" />
 
+        <Button
+            android:id="@+id/bt_take_photo"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="15dp"
+            android:layout_toStartOf="@+id/bt_open_album"
+            android:background="@drawable/ic_take_photo" />
+        <Button
+            android:id="@+id/bt_open_album"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="8dp"
+            android:scaleY="1.1"
+            android:scaleX="1.08"
+            android:background="@drawable/ic_picture" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorGray" />
+    </RelativeLayout>
 
 </LinearLayout>

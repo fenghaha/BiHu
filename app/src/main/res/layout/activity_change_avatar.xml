@@ -16,7 +16,7 @@
         app:layout_scrollFlags="scroll|enterAlways|snap"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:title="回答:   "
+        app:title="修改头像"
         app:titleTextColor="#000" />
 
     <View
@@ -24,17 +24,23 @@
         android:layout_height="1dp"
         android:background="@color/colorGray" />
 
-    <EditText
-        android:id="@+id/text_answer_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="15dp"
-        android:background="@null"
-        android:gravity="top|start"
-        android:hint="写回答"
-        android:maxLength="500"
-        android:padding="10dp"
-        android:textSize="16sp" />
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/avatar_for_change"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_gravity="center|bottom"
+        android:layout_marginTop="100dp"
+        android:src="@drawable/nav_icon" />
+
+    <Button
+        android:id="@+id/bt_choose_image"
+        android:layout_width="280dp"
+
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:background="@color/colorLightBlue"
+        android:text="选择头像" />
 
 
 </LinearLayout>

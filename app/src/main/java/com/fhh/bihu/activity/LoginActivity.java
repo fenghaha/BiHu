@@ -113,7 +113,7 @@ public class LoginActivity extends AppCompatActivity {
     private void autoLogin() {
 
         mAutoLogin.setChecked(true);
-        ToastUtil.makeToast("2秒后将自动登录,现在取消还来得及");
+        ToastUtil.makeToast("2秒后将自动登录,现在取消还来得及哦!");
         new Thread(() -> {
             try {
                 Thread.sleep(2000);
@@ -161,29 +161,32 @@ public class LoginActivity extends AppCompatActivity {
             String password = mPassword.getText().toString();
             //实现登录逻辑
             String param = "username=" + username + "&password=" + password;
-            HttpUtil.sendHttpRequest(ApiParam.LOGIN, param, new HttpUtil.HttpCallBack() {
-                @Override
-                public void onSuccess(String data) {
+            HttpUtil.sendHttpRequest(ApiParam.LOGIN, param,
+                    new HttpUtil.HttpCallBack() {
+                        @Override
+                        public void onResponse(HttpUtil.Response response) {
+                            if (response.getInfo().equals("success")) {
+                                //设置全局用户
+                                MyApplication.setUser(JsonParse.getUser(response.getData()));
+                                Log.d("chazhao", "token = " + MyApplication.getToken());
+                                //保存账号密码
+                                saveRememberAndAutoLogin();
+                                //跳转到MainActivity
+                                Intent intent = new Intent(LoginActivity.this, QuestionListActivity.class);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                ToastUtil.makeToast(response.getInfo());
+                            }
+                        }
 
-                    //设置全局用户
-                    MyApplication.setUser(JsonParse.getUser(data));
-                    Log.d("chazhao", "token = " + MyApplication.getToken());
-                    //保存账号密码
-                    saveRememberAndAutoLogin();
-
-                    //跳转到MainActivity
-                    Intent intent = new Intent(LoginActivity.this, QuestionListActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-
-                @Override
-                public void onFail(String reason) {
-                    if ("参数".equals(reason)) {
-                        ToastUtil.makeToast("账号密码有误,登录失败");
-                    }
-                }
-            });
+                        @Override
+                        public void onFail(String reason) {
+                            if ("参数".equals(reason)) {
+                                ToastUtil.makeToast("账号密码有误,登录失败");
+                            }
+                        }
+                    });
 
         } else {
             if (!MyTextUtils.isLegal(mAccount.getText().toString(), 2, 10)) {

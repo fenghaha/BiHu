@@ -48,14 +48,13 @@ public class AnswerQuestionActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_close);
         }
-        //初始化输入框
-
+        //初始化输入框 并设置监听器
+        //当输入框类输入文字时,
+        //把发送按钮由黑色变成蓝色,提升视觉效果(参考知乎)
         mContent = findViewById(R.id.text_answer_content);
         mContent.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                mIsEditStatus = !MyTextUtils.isEmpty(mContent.getText().toString());
-                invalidateOptionsMenu();
             }
 
             @Override
@@ -66,8 +65,6 @@ public class AnswerQuestionActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                mIsEditStatus = !MyTextUtils.isEmpty(mContent.getText().toString());
-                invalidateOptionsMenu();
             }
         });
 
@@ -88,7 +85,6 @@ public class AnswerQuestionActivity extends AppCompatActivity {
             menu.findItem(R.id.send).setVisible(true);
             menu.findItem(R.id.send_pre).setVisible(false);
         }
-
         return true;
     }
 
@@ -118,19 +114,24 @@ public class AnswerQuestionActivity extends AppCompatActivity {
             String param = "qid=" + question.getId()
                     + "&content=" + mContent.getText().toString()
                     + "&token=" + MyApplication.getToken();
-            HttpUtil.sendHttpRequest(ApiParam.ANSWER_A_QUESTION, param, new HttpUtil.HttpCallBack() {
-                @Override
-                public void onSuccess(String data) {
-                    ToastUtil.makeToast("回答成功!");
-                    finish();
-                }
+            HttpUtil.sendHttpRequest(ApiParam.ANSWER_A_QUESTION, param,
+                    new HttpUtil.HttpCallBack() {
+                        @Override
+                        public void onResponse(HttpUtil.Response response) {
+                            if (response.getInfo().equals("success")) {
+                                ToastUtil.makeToast("回答成功!");
+                                finish();
+                            } else {
+                                ToastUtil.makeToast(response.getInfo());
+                            }
+                        }
 
-                @Override
-                public void onFail(String reason) {
-                    if ("参数".equals(reason))
-                        ToastUtil.makeToast("由于网络原因,回答失败");
-                }
-            });
+                        @Override
+                        public void onFail(String reason) {
+                            if ("参数".equals(reason))
+                                ToastUtil.makeToast("由于网络原因,回答失败");
+                        }
+                    });
         } else if (MyTextUtils.isEmpty(mContent.getText().toString())) {
             ToastUtil.makeToast("内容不能为空");
         }

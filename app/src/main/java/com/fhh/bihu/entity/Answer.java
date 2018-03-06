@@ -1,30 +1,33 @@
 package com.fhh.bihu.entity;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * 问题实体类
- * Created by FengHaHa on 2018/2/24 0024.
+ * Created by FengHaHa on 2018/3/1 0001.
  */
 
-public class Question implements Serializable{
+public class Answer {
+
     private int id;
-    private String title;
     private String content;
     private String date;
-    private String recent;//最近修改时间
-    private int answerCount;
     private int authorId;
     private int excitingCount;
     private int naiveCount;
+    private int bestCount;
     private String authorName;
     private String authorAvatarUrlString;
     private ArrayList<String> imageUrlStrings = new ArrayList<>();
+    private boolean isNaive;
+    private boolean isExciting;
 
-    private boolean isNaive = false;
-    private boolean isExciting =false;
-    private boolean isFavorite = false;
+    public int getBestCount() {
+        return bestCount;
+    }
+
+    public void setBestCount(int bestCount) {
+        this.bestCount = bestCount;
+    }
 
     public ArrayList<String> getImageUrlStrings() {
         return imageUrlStrings;
@@ -40,14 +43,6 @@ public class Question implements Serializable{
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getContent() {
@@ -66,21 +61,6 @@ public class Question implements Serializable{
         this.date = date;
     }
 
-    public String getRecent() {
-        return recent;
-    }
-
-    public void setRecent(String recent) {
-        this.recent = recent;
-    }
-
-    public int getAnswerCount() {
-        return answerCount;
-    }
-
-    public void setAnswerCount(int answerCount) {
-        this.answerCount = answerCount;
-    }
 
     public int getAuthorId() {
         return authorId;
@@ -138,18 +118,11 @@ public class Question implements Serializable{
         isExciting = exciting;
     }
 
-    public boolean isFavorite() {
-        return isFavorite;
-    }
-
-    public void setFavorite(boolean favorite) {
-        isFavorite = favorite;
-    }
 
     @Override
     public String toString() {
-        return "id = "+id+"tittle = "+title+"content = "+content+title+"date = "+date+"recent = "+recent+
-                "answerCount = "+answerCount+"excitingCount = "+excitingCount+"naiveCount = "+naiveCount+
-                "authorName = "+authorName;
+        return "id = " + id + "content = " + content + "date = " + date +
+                "excitingCount = " + excitingCount + "naiveCount = " + naiveCount +
+                "authorName = " + authorName;
     }
 }

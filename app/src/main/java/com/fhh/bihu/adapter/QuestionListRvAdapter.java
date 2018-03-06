@@ -1,21 +1,32 @@
 package com.fhh.bihu.adapter;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.NavUtils;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.fhh.bihu.R;
+import com.fhh.bihu.activity.AnswerListActivity;
 import com.fhh.bihu.activity.AnswerQuestionActivity;
 import com.fhh.bihu.entity.Question;
 import com.fhh.bihu.util.ApiParam;
 import com.fhh.bihu.util.HttpUtil;
+import com.fhh.bihu.util.ImageUtil;
 import com.fhh.bihu.util.JsonParse;
 import com.fhh.bihu.util.MyApplication;
+import com.fhh.bihu.util.MyTextUtils;
 import com.fhh.bihu.util.ToastUtil;
 
 
@@ -28,18 +39,24 @@ import java.util.List;
 
 public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private static final String TAG = "QuestionListRvAdapter";
 
     private static final int TYPE_NORMAL = 0;
     private static final int TYPE_TAIL = 1;
+    public static final int TYPE_HOME = 0;
+    public static final int TYPE_FAVORITE = 1;
+
+    public static boolean isLoading = false;
+    private int questionType;
+
     private List<Question> mQuestionList;
 
-    public QuestionListRvAdapter(List<Question> mQuestionList) {
+    public QuestionListRvAdapter(List<Question> mQuestionList, int type) {
         this.mQuestionList = mQuestionList;
+        questionType = type;
     }
 
     static class NormalViewHolder extends RecyclerView.ViewHolder {
-
-        CardView itemAll;
         TextView title;
         TextView authorName;
         TextView content;
@@ -49,16 +66,18 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         TextView naiveNum;
         TextView date;
 
+        LinearLayout forClick;
+
         ImageView avatar;
         ImageView comment;
         ImageView exciting;
         ImageView naive;
         ImageView favorite;
+        ImageView imagePre;
 
 
-        public NormalViewHolder(View itemView) {
+        NormalViewHolder(View itemView) {
             super(itemView);
-            itemAll = (CardView) itemView;
             title = itemView.findViewById(R.id.tv_question_title);
             authorName = itemView.findViewById(R.id.tv_question_authorname);
             content = itemView.findViewById(R.id.tv_question_content);
@@ -67,13 +86,14 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             excitingNum = itemView.findViewById(R.id.tv_question_exciting_num);
             naiveNum = itemView.findViewById(R.id.tv_question_naive_num);
             date = itemView.findViewById(R.id.tv_ask_date);
+            forClick = itemView.findViewById(R.id.layout_to_click);
 
             avatar = itemView.findViewById(R.id.image_question_avatar);
             comment = itemView.findViewById(R.id.image_question_comment);
             exciting = itemView.findViewById(R.id.image_question_exciting);
             naive = itemView.findViewById(R.id.image_question_naive);
             favorite = itemView.findViewById(R.id.image_question_favorite);
-
+            imagePre = itemView.findViewById(R.id.image_preview);
         }
     }
 
@@ -81,21 +101,21 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         private TextView loadingTextView;
 
-        public TailViewHolder(View itemView) {
+        TailViewHolder(View itemView) {
             super(itemView);
             loadingTextView = itemView.findViewById(R.id.tv_loading_tail);
         }
     }
 
+
     @Override
     public int getItemViewType(int position) {
-       // Log.d("ItemCoun", "itemcount=" + getItemCount() + "position=" + position);
-        return position == getItemCount() - 1 ? TYPE_TAIL : TYPE_NORMAL;
+        // Log.d("ItemCoun", "itemcount=" + getItemCount() + "position=" + position);
+        return position == mQuestionList.size() ? TYPE_TAIL : TYPE_NORMAL;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        //user.setToken("4642a17dd03233682abf41c3d823cdcd9ff102d6");
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         switch (viewType) {
             case TYPE_NORMAL:
@@ -104,9 +124,7 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 initItemListener(holder);
                 return holder;
             case TYPE_TAIL:
-                TailViewHolder holder1 = new TailViewHolder(inflater.
-                        inflate(R.layout.tail_item, parent, false));
-                return holder1;
+                return new TailViewHolder(inflater.inflate(R.layout.tail_item, parent, false));
         }
         return null;
     }
@@ -114,22 +132,43 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         switch (getItemViewType(position)) {
-            case TYPE_NORMAL: {
+            case TYPE_NORMAL:
                 NormalViewHolder normalViewHolder = (NormalViewHolder) holder;
                 Question question = mQuestionList.get(position);
                 normalViewHolder.title.setText(question.getTitle());
                 normalViewHolder.authorName.setText(question.getAuthorName());
-                //TODO 实现头像
-                //holder.avatar.setImageURi();
-                normalViewHolder.content.setText(question.getContent());
-                // Log.d("getRecent", question.getRecent());
-                normalViewHolder.date.setText("发布于"+question.getDate());
-                if ("null".equals(question.getRecent())) {
-                    normalViewHolder.updateTime.setText(question.getDate() + "提问");
+                Log.d(TAG, "position: " + position);
+                if (!MyTextUtils.isNull(question.getAuthorAvatarUrlString())) {
+                    Log.d(TAG, "第 " + position + "用户名" + question.getAuthorName() + "头像不为空"
+                            + "url=" + question.getAuthorAvatarUrlString());
+                    HttpUtil.loadImage(question.getAuthorAvatarUrlString(),
+                            (Bitmap bitmap, String info) -> {
+                                if ("success".equals(info))
+                                    normalViewHolder.avatar.setImageBitmap(bitmap);
+                                else normalViewHolder.avatar.setImageResource(R.drawable.nav_icon);
+                            });
                 } else {
-                    normalViewHolder.updateTime.setText(question.getRecent() + "更新");
+                    Log.d(TAG, "第 " + position + "用户名" + question.getAuthorName() + "头像为空");
+                    normalViewHolder.avatar.setImageResource(R.drawable.nav_icon);
+                }
+                if (question.getImageUrlStrings() != null) {
+                    Log.d(TAG, "第 " + position + "用户名" + question.getAuthorName() + "图片不为空"
+                            + "url=" + question.getImageUrlStrings().get(0));
+                    String url = question.getImageUrlStrings().get(0);
+                    HttpUtil.loadImage(url, (bitmap, info) -> {
+                        if ("success".equals(info)) {
+                            normalViewHolder.imagePre.setImageBitmap(bitmap);
+                            normalViewHolder.imagePre.setVisibility(View.VISIBLE);
+                        } else normalViewHolder.imagePre.setVisibility(View.GONE);
+                    });
+                }else {
+                    normalViewHolder.imagePre.setVisibility(View.GONE);
                 }
 
+                normalViewHolder.content.setText(question.getContent());
+                // Log.d("getRecent", question.getRecent());
+                normalViewHolder.date.setText("发布于" + question.getDate());
+                normalViewHolder.updateTime.setText(question.getRecent() + "更新");
                 normalViewHolder.answerNum.setText(String.valueOf(question.getAnswerCount()));
                 normalViewHolder.excitingNum.setText(String.valueOf(question.getExcitingCount()));
                 normalViewHolder.naiveNum.setText(String.valueOf(question.getNaiveCount()));
@@ -149,16 +188,19 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 } else {
                     normalViewHolder.favorite.setImageResource(R.drawable.ic_favorite_clicked);
                 }
-            }
-            break;
+                break;
 
-            //TODO 把token改好
             case TYPE_TAIL:
-                Log.d("4444", "token = " + MyApplication.getToken());
-                String param = "page=" + mQuestionList.size() / 10 + "&count=10" + "&token=" + MyApplication.getToken();
-                TailViewHolder tailViewHolder = (TailViewHolder) holder;
-                loadMore(ApiParam.GET_QUESTION_LIST, param, tailViewHolder);
 
+                String param = "page=" + mQuestionList.size() / 10 + "&count=10"
+                        + "&token=" + MyApplication.getToken();
+                TailViewHolder tailViewHolder = (TailViewHolder) holder;
+
+                String url = (questionType == TYPE_HOME ?
+                        ApiParam.GET_QUESTION_LIST : ApiParam.GET_FAVORITE_LIST);
+                loadMore(url, param, tailViewHolder);
+                if (questionType == TYPE_FAVORITE)
+                    Log.d("ISLODEMORE?", "收藏列表加载一次");
                 break;
         }
 
@@ -169,7 +211,6 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         return mQuestionList.size() + 1;//加上loading小尾巴
     }
 
-    //点赞
     private void addExciting(NormalViewHolder holder, Question question) {
 
 
@@ -180,9 +221,14 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         + "&token=" + MyApplication.getToken(),
                 new HttpUtil.HttpCallBack() {
                     @Override
-                    public void onSuccess(String data) {
-                        question.setExcitingCount(question.getExcitingCount() + 1);
-                        question.setExciting(true);
+                    public void onResponse(HttpUtil.Response response) {
+                        if (response.getInfo().equals("excited")) {
+                            question.setExcitingCount(question.getExcitingCount() + 1);
+                            question.setExciting(true);
+                        } else {
+                            ToastUtil.makeToast(response.getInfo());
+                        }
+
                     }
 
                     @Override
@@ -201,9 +247,14 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         "&token=" + MyApplication.getToken(),
                 new HttpUtil.HttpCallBack() {
                     @Override
-                    public void onSuccess(String data) {
-                        question.setExcitingCount(question.getExcitingCount() - 1);
-                        question.setExciting(false);
+                    public void onResponse(HttpUtil.Response response) {
+                        if (response.getInfo().equals("success")) {
+                            question.setExcitingCount(question.getExcitingCount() - 1);
+                            question.setExciting(false);
+                        } else {
+                            ToastUtil.makeToast(response.getInfo());
+                        }
+
                     }
 
                     @Override
@@ -222,10 +273,14 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         "&token=" + MyApplication.getToken(),
                 new HttpUtil.HttpCallBack() {
                     @Override
-                    public void onSuccess(String data) {
+                    public void onResponse(HttpUtil.Response response) {
+                        if (response.getInfo().equals("naive")) {
+                            question.setNaiveCount(question.getNaiveCount() + 1);
+                            question.setNaive(true);
+                        } else {
+                            ToastUtil.makeToast(response.getInfo());
+                        }
 
-                        question.setNaiveCount(question.getNaiveCount() + 1);
-                        question.setNaive(true);
                     }
 
                     @Override
@@ -238,16 +293,20 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     private void cancelNaive(NormalViewHolder holder, Question question) {
 
-        holder.naiveNum.setText(String.valueOf(Integer.parseInt(holder.naiveNum.getText().toString()) - 1));
+        holder.naiveNum.setText(String.valueOf(question.getNaiveCount() - 1));
         holder.naive.setImageResource(R.drawable.ic_naive);
         HttpUtil.sendHttpRequest(ApiParam.CANCEL_NAIVE, "id=" + question.getId() + "&type=1"
                         + "&token=" + MyApplication.getToken(),
                 new HttpUtil.HttpCallBack() {
                     @Override
-                    public void onSuccess(String data) {
+                    public void onResponse(HttpUtil.Response response) {
+                        if (response.getInfo().equals("success")) {
+                            question.setNaiveCount(question.getNaiveCount() - 1);
+                            question.setNaive(false);
+                        } else {
+                            ToastUtil.makeToast(response.getInfo());
+                        }
 
-                        question.setNaiveCount(question.getNaiveCount() - 1);
-                        question.setNaive(false);
                     }
 
                     @Override
@@ -259,26 +318,28 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     private void initItemListener(NormalViewHolder holder) {
-        holder.content.setOnClickListener(v -> {
+        holder.content.setLines(3);
+        holder.forClick.setOnClickListener(v -> {
             int position = holder.getAdapterPosition();
             Question question = mQuestionList.get(position);
-            //TODO 跳转到问题详情页
+            //跳转到问题详情页
+            AnswerListActivity.actionStart(holder.answerNum.getContext(), question);
         });
         holder.comment.setOnClickListener(v -> {
             int position = holder.getAdapterPosition();
             Question question = mQuestionList.get(position);
             Log.d("Intent_que", question.toString());
-            AnswerQuestionActivity.actionStart(v.getContext(),question);
+            AnswerQuestionActivity.actionStart(v.getContext(), question);
         });
         holder.exciting.setOnClickListener(v -> {
             int position = holder.getAdapterPosition();
             Question question = mQuestionList.get(position);
             if (!question.isNaive()) {
                 if (!question.isExciting()) {
-                    //TODO 网络请求 点赞 成功时把赞数+1
+                    // 网络请求 点赞 成功时把赞数+1
                     addExciting(holder, question);//点赞一次
                 } else {
-                    //TODO网络请求  取消赞 成功时把赞数-1
+                    //网络请求  取消赞 成功时把赞数-1
                     cancelExciting(holder, question);//取消点赞
                 }
             } else {
@@ -293,10 +354,10 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             Question question = mQuestionList.get(position);
             if (!question.isExciting()) {
                 if (!question.isNaive()) {
-                    //TODO网络请求  踩 成功时把踩数-1
+                    //网络请求  踩 成功时把踩数-1
                     addNaive(holder, question);
                 } else {
-                    //TODO网络请求  踩 成功时把踩数-1
+                    //网络请求  踩 成功时把踩数-1
                     cancelNaive(holder, question);
                 }
             } else {
@@ -306,7 +367,7 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }
 
         });
-        holder.favorite.setOnClickListener(vv -> {
+        holder.favorite.setOnClickListener(v -> {
 
             int position = holder.getAdapterPosition();
             Question question = mQuestionList.get(position);
@@ -318,8 +379,13 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                 + "&token=" + MyApplication.getToken(),
                         new HttpUtil.HttpCallBack() {
                             @Override
-                            public void onSuccess(String data) {
-                                question.setFavorite(true);
+                            public void onResponse(HttpUtil.Response response) {
+                                if (response.getInfo().equals("success")) {
+                                    question.setFavorite(true);
+                                } else {
+                                    ToastUtil.makeToast(response.getInfo());
+                                }
+
                             }
 
                             @Override
@@ -333,8 +399,13 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                 + "&token=" + MyApplication.getToken(),
                         new HttpUtil.HttpCallBack() {
                             @Override
-                            public void onSuccess(String data) {
-                                question.setFavorite(false);
+                            public void onResponse(HttpUtil.Response response) {
+                                if (response.getInfo().equals("success")) {
+                                    question.setFavorite(false);
+                                } else {
+                                    ToastUtil.makeToast(response.getInfo());
+                                }
+
                             }
 
                             @Override
@@ -350,35 +421,50 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     private void loadMore(String url, String param, TailViewHolder holder) {
-        Log.d("ISLODEMORE?", "已经loadMore了哦哦哦哦哦哦 ");
+
+        isLoading = true;
         //每次加载10个  当加载出的总数不是10的倍数时  加载完毕
-        if ((getItemCount() - 1) % 10 != 0) {
-            holder.loadingTextView.setText("没有更多了");
+        if (mQuestionList.size() % 10 != 0) {
+            holder.loadingTextView.setText("没有更多了!");
+            isLoading = false;
             return;
         }
 
+
         holder.loadingTextView.setText("加载中...");
+        if (questionType == TYPE_FAVORITE && isLoading) return;
+
 
         //请求新数据
         HttpUtil.sendHttpRequest(url, param, new HttpUtil.HttpCallBack() {
             @Override
-            public void onSuccess(String data) {
-                //Log.d("LOADING", data);
-                if (data == null || data.equals("null") || data.equals("[]")) {
-                    ToastUtil.makeToast("没有更多了");
-                    holder.loadingTextView.setText("没有更多了");
-                    return;
+            public void onResponse(HttpUtil.Response response) {
+                if (response.getInfo().equals("success")) {
+                    if (mQuestionList.size() == Integer.parseInt(JsonParse.getElement
+                            (response.getData(), "totalCount"))) {
+                        ToastUtil.makeToast("没有更多了###");
+                        isLoading = false;
+                        holder.loadingTextView.setText("没有更多了");
+                    }
+                    if (JsonParse.getQuestionList(response.getData()).size() == 0) {
+                        ToastUtil.makeToast("没有更多了???");
+                        isLoading = false;
+                        holder.loadingTextView.setText("没有更多了");
+                    } else {
+                        mQuestionList.addAll(JsonParse.getQuestionList(response.getData()));
+
+                        notifyDataSetChanged();
+                    }
+                } else {
+                    ToastUtil.makeToast(response.getInfo());
                 }
-
-                mQuestionList.addAll(JsonParse.getQuestionList(data));
-
-                notifyDataSetChanged();
             }
 
             @Override
             public void onFail(String reason) {
                 holder.loadingTextView.setText("加载失败");
                 ToastUtil.makeToast("加载失败,请稍后再试");
+                isLoading = false;
             }
         });
     }
