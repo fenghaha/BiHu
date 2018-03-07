@@ -28,8 +28,8 @@ import java.io.IOException;
 
 @SuppressLint("Registered")
 public class BaseActivity extends AppCompatActivity {
-    final int TAKE_PHOTO = 0;
-    final int OPEN_ALBUM = 1;
+    final int TAKE_PHOTO = 3;
+    final int OPEN_ALBUM = 4;
 
     String imageName;
     Uri imageUri;
@@ -136,7 +136,6 @@ public class BaseActivity extends AppCompatActivity {
                     ToastUtil.makeToast("你拒绝了权限请求,该功能无法使用!");
                 }
                 break;
-
         }
     }
 }

@@ -23,8 +23,6 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-
-        android:layout_marginTop="15dp"
         android:layout_weight="1">
 
         <LinearLayout
@@ -35,8 +33,7 @@
             <EditText
                 android:id="@+id/text_answer_content"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="280dp"
                 android:background="@null"
                 android:gravity="top|start"
                 android:hint="写回答"
@@ -44,62 +41,27 @@
                 android:padding="10dp"
                 android:textSize="16sp" />
 
-            <LinearLayout
-                android:id="@+id/answer_all_image"
-                android:layout_width="match_parent"
+            <FrameLayout
+                android:id="@+id/answer_image_all"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:visibility="gone">
-
                 <ImageView
-                    android:id="@+id/answer_image_0"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginBottom="10dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/nav_icon"
-                    android:visibility="visible" />
-
-                <ImageView
-                    android:id="@+id/answer_image_1"
+                    android:id="@+id/answer_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:scaleType="fitXY"
-                    android:src="@drawable/nav_icon"
-                    android:visibility="visible" />
-
+                    android:src="@drawable/ic_add_question" />
                 <ImageView
-                    android:id="@+id/answer_image_2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginTop="10dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/nav_icon"
-                    android:visibility="visible" />
+                    android:id="@+id/cancel_image"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="end|top"
+                    android:src="@drawable/ic_exit_dark" />
+            </FrameLayout>
 
-                <ImageView
-                    android:id="@+id/answer_image_3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginTop="10dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/nav_icon"
-                    android:visibility="visible" />
 
-                <ImageView
-                    android:id="@+id/answer_image_4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginTop="10dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/nav_icon"
-                    android:visibility="visible" />
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
@@ -115,10 +77,12 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorGray" />
+            android:background="#60bfbfbf"
+            android:id="@+id/view" />
 
         <Button
             android:id="@+id/bt_down"
+            android:visibility="gone"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_alignParentStart="true"

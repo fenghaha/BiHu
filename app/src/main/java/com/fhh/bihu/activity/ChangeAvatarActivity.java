@@ -112,34 +112,31 @@ public class ChangeAvatarActivity extends BaseActivity {
     private void changeAvatar() {
         // 上传头像
         if (imagePath != null) {
-            HttpUtil.uploadToQiNiu(imagePath, imageName, new UpCompletionHandler() {
-                @Override
-                public void complete(String key, ResponseInfo info, JSONObject response) {
-                    if (info.isOK()) {
-                        String param = "token=" + MyApplication.getToken() + "&avatar="
-                                + ApiParam.MY_QINIU_URL + imageName;
-                        //成功上传到7牛后  用逼乎api修改头像
-                        HttpUtil.sendHttpRequest(ApiParam.MODIFY_AVATAR, param, new HttpUtil.HttpCallBack() {
-                            @Override
-                            public void onResponse(HttpUtil.Response response) {
-                                if (response.getInfo().equals("success")) {
-                                    MyApplication.getUser().setAvatarUrl(ApiParam.MY_QINIU_URL + imageName);
-                                    ToastUtil.makeToast("修改成功!");
-                                    finish();
-                                    //todo改掉头像显示
-                                } else {
-                                    ToastUtil.makeToast(response.getInfo());
-                                }
+            HttpUtil.uploadToQiNiu(imagePath, imageName, (key, info, response) -> {
+                if (info.isOK()) {
+                    String param = "token=" + MyApplication.getToken() + "&avatar="
+                            + ApiParam.MY_QINIU_URL + imageName;
+                    //成功上传到7牛后  用逼乎api修改头像
+                    HttpUtil.sendHttpRequest(ApiParam.MODIFY_AVATAR, param, new HttpUtil.HttpCallBack() {
+                        @Override
+                        public void onResponse(HttpUtil.Response response) {
+                            if (response.getInfo().equals("success")) {
+                                MyApplication.getUser().setAvatarUrl(ApiParam.MY_QINIU_URL + imageName);
+                                ToastUtil.makeToast("修改成功!");
+                                finish();
+                                //todo改掉头像显示
+                            } else {
+                                ToastUtil.makeToast(response.getInfo());
                             }
+                        }
 
-                            @Override
-                            public void onFail(String reason) {
-                                ToastUtil.makeToast("服务器连接错误");
-                            }
-                        });
-                    } else {
-                        ToastUtil.makeToast("修改失败,请检查网络稍后再试");
-                    }
+                        @Override
+                        public void onFail(String reason) {
+                            ToastUtil.makeToast("服务器连接错误");
+                        }
+                    });
+                } else {
+                    ToastUtil.makeToast("修改失败,请检查网络稍后再试");
                 }
             });
         } else {

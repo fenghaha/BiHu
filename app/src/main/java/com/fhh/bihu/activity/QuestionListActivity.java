@@ -61,6 +61,7 @@ public class QuestionListActivity extends AppCompatActivity {
     private MyDialog dialog;
     private CircleImageView avatar;
     private TextView mUsernameTv;
+    MyApplication application;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,15 +69,16 @@ public class QuestionListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_question_list);
         ToastUtil.makeToast("欢迎来到逼乎!");
         setUpViews();
+        application = (MyApplication) getApplication();
         updateQuestions();
     }
 
     //刷新问题列表数据
     private void updateQuestions() {
-        Log.d("刷新时的token", "token = " + MyApplication.getToken());
+        Log.d("刷新时的token", "token = " + application.getToken());
         swipeRefresh.setRefreshing(true);
         HttpUtil.sendHttpRequest(ApiParam.GET_QUESTION_LIST, "page=0" + "&count=10"
-                        + "&token=" + MyApplication.getToken(),
+                        + "&token=" + application.getToken(),
                 new HttpUtil.HttpCallBack() {
 
                     @Override
@@ -123,9 +125,11 @@ public class QuestionListActivity extends AppCompatActivity {
         View view = navigationView.inflateHeaderView(R.layout.nav_header);
         mUsernameTv = view.findViewById(R.id.tv_nav_header_username);
         avatar = view.findViewById(R.id.nav_header_avatar);
-        mUsernameTv.setText(MyApplication.getUser().getUsername());
-        if (!MyTextUtils.isNull(MyApplication.getUser().getAvatarUrl())) {
-            HttpUtil.loadImage(MyApplication.getUser().getAvatarUrl(), (bitmap, info) -> {
+
+
+        mUsernameTv.setText( application.getUser().getUsername());
+        if (!MyTextUtils.isNull( application.getUser().getAvatarUrl())) {
+            HttpUtil.loadImage( application.getUser().getAvatarUrl(), (bitmap, info) -> {
                 if ("success".equals(info)) avatar.setImageBitmap(bitmap);
                 else avatar.setImageResource(R.drawable.nav_icon);
             });
@@ -233,7 +237,7 @@ public class QuestionListActivity extends AppCompatActivity {
     }
 
     private void changePassword(String newPassword) {
-        String param = "password=" + newPassword + "&token=" + MyApplication.getToken();
+        String param = "password=" + newPassword + "&token=" + application.getToken();
         HttpUtil.sendHttpRequest(ApiParam.CHANGE_PASSWORD, param, new HttpUtil.HttpCallBack() {
             @Override
             public void onResponse(HttpUtil.Response response) {
@@ -244,7 +248,7 @@ public class QuestionListActivity extends AppCompatActivity {
                     //保存注册好的账号密码
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putBoolean("remember_password", true);
-                    editor.putString("account", MyApplication.getUser().getUsername());
+                    editor.putString("account", application.getUser().getUsername());
                     editor.putString("password", "");
                     editor.putBoolean("auto_login", false);
                     editor.apply();
@@ -264,8 +268,8 @@ public class QuestionListActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         navigationView.setCheckedItem(R.id.nav_home);
-        if (!MyTextUtils.isNull(MyApplication.getUser().getAvatarUrl())) {
-            HttpUtil.loadImage(MyApplication.getUser().getAvatarUrl(), (bitmap, info) -> {
+        if (!MyTextUtils.isNull(application.getUser().getAvatarUrl())) {
+            HttpUtil.loadImage(application.getUser().getAvatarUrl(), (bitmap, info) -> {
                 if ("success".equals(info)) avatar.setImageBitmap(bitmap);
                 else avatar.setImageResource(R.drawable.nav_icon);
             });
