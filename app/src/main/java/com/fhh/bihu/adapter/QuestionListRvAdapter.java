@@ -203,8 +203,7 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 String url = (questionType == TYPE_HOME ?
                         ApiParam.GET_QUESTION_LIST : ApiParam.GET_FAVORITE_LIST);
                 loadMore(url, param, tailViewHolder);
-                if (questionType == TYPE_FAVORITE)
-                    Log.d("ISLODEMORE?", "收藏列表加载一次");
+
                 break;
         }
 
@@ -425,35 +424,41 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     private void loadMore(String url, String param, TailViewHolder holder) {
-
+        if (questionType == TYPE_FAVORITE)
+            Log.d("ISLODEMORE?", "收藏列表加载一次");
         isLoading = true;
         //每次加载10个  当加载出的总数不是10的倍数时  加载完毕
         if (mQuestionList.size() % 10 != 0) {
-            holder.loadingTextView.setText("没有更多了!");
+            holder.loadingTextView.setText("没有更多了  :)");
             isLoading = false;
             return;
         }
 
 
         holder.loadingTextView.setText("加载中...");
-        if (questionType == TYPE_FAVORITE && isLoading) return;
+        if (questionType == TYPE_FAVORITE && isLoading){
+            holder.loadingTextView.setText("你还没有收藏哦  :)");
+            isLoading = false;
+            return;
+        }
 
 
         //请求新数据
         HttpUtil.sendHttpRequest(url, param, new HttpUtil.HttpCallBack() {
             @Override
             public void onResponse(HttpUtil.Response response) {
+                Log.d("DATAonResponse: ", "onResponse: " + response.getData() + "que:" + JsonParse.getElement(response.getData(), "questions"));
                 if (response.getInfo().equals("success")) {
                     if (mQuestionList.size() == Integer.parseInt(JsonParse.getElement
                             (response.getData(), "totalCount"))) {
                         ToastUtil.makeToast("没有更多了###");
                         isLoading = false;
-                        holder.loadingTextView.setText("没有更多了");
+                        holder.loadingTextView.setText("没有更多了  :)");
                     }
-                    if (JsonParse.getQuestionList(response.getData()).size() == 0) {
+                    if (JsonParse.getElement(response.getData(), "questions").equals("[]")) {
                         ToastUtil.makeToast("没有更多了???");
                         isLoading = false;
-                        holder.loadingTextView.setText("没有更多了");
+                        holder.loadingTextView.setText("没有更多了 :)");
                     } else {
                         mQuestionList.addAll(JsonParse.getQuestionList(response.getData()));
 
