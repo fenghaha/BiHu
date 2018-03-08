@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -19,7 +18,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.fhh.bihu.R;
 import com.fhh.bihu.entity.Question;
@@ -28,20 +26,17 @@ import com.fhh.bihu.util.HttpUtil;
 import com.fhh.bihu.util.ImageUtil;
 import com.fhh.bihu.util.MyApplication;
 import com.fhh.bihu.util.MyTextUtils;
+import com.fhh.bihu.util.SoftKeyBoardListener;
 import com.fhh.bihu.util.ToastUtil;
-import com.qiniu.android.http.ResponseInfo;
-import com.qiniu.android.storage.UpCompletionHandler;
-
-import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
+
 
 public class AnswerQuestionActivity extends BaseActivity {
 
     private EditText mContent;
     private Question question;
-    private Button mCloseKeyborad;
+    private Button mCloseKeyboard;
     private Button mTakePhoto;
     private ImageView mCancelImage;
     private Button mOpenAlbum;
@@ -77,14 +72,33 @@ public class AnswerQuestionActivity extends BaseActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_close);
         }
-        mCloseKeyborad = findViewById(R.id.bt_down);
+        mCloseKeyboard = findViewById(R.id.bt_down);
         mTakePhoto = findViewById(R.id.bt_take_photo);
         mOpenAlbum = findViewById(R.id.bt_open_album);
         mCancelImage = findViewById(R.id.cancel_image);
         mAllImage = findViewById(R.id.answer_image_all);
+        mAnswerImage = findViewById(R.id.answer_image);
 
-        //todo  关闭键盘
-        //mCloseKeyborad.setOnClickListener();
+        SoftKeyBoardListener.setListener(AnswerQuestionActivity.this,
+                new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+                    @Override
+                    public void keyBoardShow(int height) {
+                        mCloseKeyboard.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void keyBoardHide(int height) {
+                        mCloseKeyboard.setVisibility(View.GONE);
+                    }
+                });
+
+        // 关闭键盘
+        mCloseKeyboard.setOnClickListener(v -> hideKeyboard());
+
+        mCancelImage.setOnClickListener(v -> {
+            hasImage = false;
+            mAllImage.setVisibility(View.GONE);
+        });
 
         mCancelImage.setOnClickListener(v -> {
             hasImage = false;
@@ -98,6 +112,7 @@ public class AnswerQuestionActivity extends BaseActivity {
         //当输入框类输入文字时,
         //把发送按钮由黑色变成蓝色,提升视觉效果(参考知乎)
         mContent = findViewById(R.id.text_answer_content);
+
         mContent.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -159,6 +174,8 @@ public class AnswerQuestionActivity extends BaseActivity {
         HttpUtil.uploadToQiNiu(imagePath, imageName, (key, info, response) -> {
             if (info.isOK()) {
                 send();
+            }else {
+                ToastUtil.makeToast("上传失败,请稍后再试");
             }
         });
     }
@@ -230,6 +247,7 @@ public class AnswerQuestionActivity extends BaseActivity {
                 break;
             case OPEN_ALBUM:
                 if (resultCode == RESULT_OK) {
+                    hasImage = true;
                     imageName = MyApplication.getUser().getUsername() + "questionImage"
                             + MyApplication.getToken().substring(3, 8) + ".jpg";
                     imagePath = ImageUtil.parseImageUri(data);

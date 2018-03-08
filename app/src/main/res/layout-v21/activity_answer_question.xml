@@ -45,18 +45,22 @@
                 android:id="@+id/answer_image_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
                 android:visibility="gone">
                 <ImageView
                     android:id="@+id/answer_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/ic_add_question" />
+                    android:maxWidth="340dp"
+                    android:minHeight="105dp"
+                    android:minWidth="120dp"
+                    android:scaleType="fitXY"/>
                 <ImageView
                     android:id="@+id/cancel_image"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
+                    android:layout_width="13dp"
+                    android:layout_height="13dp"
+                    android:layout_margin="7dp"
                     android:layout_gravity="end|top"
                     android:src="@drawable/ic_exit_dark" />
             </FrameLayout>
@@ -74,46 +78,45 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:orientation="horizontal">
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#60bfbfbf"
-            android:id="@+id/view" />
-
+            android:background="#77bfbfbf" />
         <Button
             android:id="@+id/bt_down"
-            android:visibility="gone"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="8dp"
             android:layout_marginStart="15dp"
-            android:background="@drawable/ic_down" />
-
+            android:layout_marginTop="10dp"
+            android:background="@drawable/ic_down"
+            android:visibility="gone" />
         <Button
             android:id="@+id/bt_take_photo"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="15dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="10dp"
             android:layout_toStartOf="@+id/bt_open_album"
             android:background="@drawable/ic_take_photo" />
+
         <Button
             android:id="@+id/bt_open_album"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_alignParentEnd="true"
             android:layout_gravity="center_vertical"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="8dp"
-            android:scaleY="1.1"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/ic_picture"
             android:scaleX="1.08"
-            android:background="@drawable/ic_picture" />
+            android:scaleY="1.1" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorGray" />
+            android:layout_height="0.5dp"
+            android:background="#77f4f4f4" />
     </RelativeLayout>
 
 </LinearLayout>

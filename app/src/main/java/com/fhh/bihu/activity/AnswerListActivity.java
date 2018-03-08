@@ -8,19 +8,14 @@ import android.support.v7.app.ActionBar;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
+
 
 import com.fhh.bihu.R;
 import com.fhh.bihu.adapter.AnswerListRvAdapter;
-import com.fhh.bihu.adapter.QuestionListRvAdapter;
 import com.fhh.bihu.entity.Answer;
 import com.fhh.bihu.entity.Question;
 import com.fhh.bihu.util.ApiParam;

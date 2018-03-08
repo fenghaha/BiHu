@@ -13,7 +13,7 @@ import com.fhh.bihu.entity.User;
  */
 
 public class MyApplication extends Application {
-    private  User mUser;
+    private static User mUser;
     private static Context mContext;
     private static final String TAG = "MyApplication";
 
@@ -24,15 +24,15 @@ public class MyApplication extends Application {
         Log.d(TAG, "onCreate: " + mContext.toString());
     }
 
-    public  void setUser(User user) {
+    public static void setUser(User user) {
         mUser = user;
     }
 
-    public  User getUser() {
+    public static User getUser() {
         return mUser;
     }
 
-    public  String getToken() {
+    public static String getToken() {
         if (mUser != null && mUser.getToken() != null) {
             return mUser.getToken();
         }

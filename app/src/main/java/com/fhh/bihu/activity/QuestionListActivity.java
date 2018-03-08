@@ -1,6 +1,7 @@
 package com.fhh.bihu.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -67,7 +68,6 @@ public class QuestionListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_list);
-        ToastUtil.makeToast("欢迎来到逼乎!");
         setUpViews();
         application = (MyApplication) getApplication();
         updateQuestions();
@@ -173,7 +173,10 @@ public class QuestionListActivity extends AppCompatActivity {
 
         //设置悬浮按钮
         FloatingActionButton button = findViewById(R.id.fab_ask);
-        button.setOnClickListener(v -> AskQuestionActivity.actionStart(QuestionListActivity.this));
+        button.setOnClickListener(v -> {
+            AskQuestionActivity.actionStart(QuestionListActivity.this);
+            finish();
+        });
 
 
         //设置下拉刷新
@@ -274,7 +277,6 @@ public class QuestionListActivity extends AppCompatActivity {
                 else avatar.setImageResource(R.drawable.nav_icon);
             });
         }
-        updateQuestions();
     }
 
     @Override
@@ -285,5 +287,9 @@ public class QuestionListActivity extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+    public static void actionStart(Context context){
+        Intent intent = new Intent(context, QuestionListActivity.class);
+        context.startActivity(intent);
     }
 }

@@ -90,12 +90,15 @@
 
                 <ImageView
                     android:id="@+id/image_preview"
-                    android:layout_width="100dp"
-                    android:layout_height="70dp"
+                    android:background="@drawable/bg_dialog"
+                    android:layout_marginEnd="5dp"
+                    android:layout_width="105dp"
+                    android:layout_height="80dp"
                     android:layout_gravity="center_vertical"
                     android:scaleType="fitXY"
                     android:src="@drawable/nav_icon"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    android:layout_marginRight="5dp" />
 
             </LinearLayout>
 
@@ -119,12 +122,16 @@
                         android:layout_gravity="center_vertical"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:minHeight="110dp"
+                        android:minWidth="120dp"
                         android:scaleType="fitXY"
                         android:src="@drawable/nav_icon"/>
                     <ImageView
                         android:id="@+id/question_image_2"
                         android:visibility="gone"
                         android:layout_gravity="center_vertical"
+                        android:minHeight="110dp"
+                        android:minWidth="120dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:scaleType="fitXY"
@@ -133,6 +140,8 @@
                         android:id="@+id/question_image_3"
                         android:layout_marginTop="10dp"
                         android:visibility="gone"
+                        android:minHeight="110dp"
+                        android:minWidth="120dp"
                         android:layout_gravity="center_vertical"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -143,6 +152,8 @@
                         android:id="@+id/question_image_4"
                         android:layout_marginTop="10dp"
                         android:visibility="gone"
+                        android:minHeight="110dp"
+                        android:minWidth="120dp"
                         android:layout_gravity="center_vertical"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -153,6 +164,8 @@
                         android:id="@+id/question_image_5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:minHeight="110dp"
+                        android:minWidth="120dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginTop="10dp"
                         android:scaleType="fitXY"
@@ -167,9 +180,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:text="于2018-02-22  23:27更新"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                android:layout_marginStart="12dp" />
 
 
         </LinearLayout>

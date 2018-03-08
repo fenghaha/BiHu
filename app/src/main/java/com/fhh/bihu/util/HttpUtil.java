@@ -84,7 +84,7 @@ public class HttpUtil {
                         //缓存图片
                         File file1 = new File(MyApplication.getContext().getExternalCacheDir() + "/" + finalImageName + ".png");
                         FileOutputStream os = new FileOutputStream(file1);
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 70, os);
                     } else {
                         handler.post(() ->callback.onResponse(null,"failed"));
                     }
@@ -96,15 +96,14 @@ public class HttpUtil {
                     e.printStackTrace();
                 }
             }).start();
-
-
         }
     }
 
     public static void uploadToQiNiu(String filePath, String name, UpCompletionHandler upCompletionHandler) {
         Configuration config = new Configuration.Builder().zone(FixedZone.zone0).build();
         UploadManager uploadManager = new UploadManager(config);
-        //等我学会写服务器接口了一定再也不把key放在代码里了...
+        //据说把key放在代码不安全...
+        //等我学会写服务器接口了再说吧2333
         String param = "accessKey=gAeLEjccJb17Ygy13jT2HD98X9LOsSOjTgKbMNE8"
                 + "&secretKey=vpgfLqXMu7NuGgssvNXB6und8j2BAvdSMfzIr89L"
                 + "&bucket=fhh-123";

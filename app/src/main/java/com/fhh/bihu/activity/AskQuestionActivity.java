@@ -1,6 +1,7 @@
 package com.fhh.bihu.activity;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +25,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -31,11 +33,13 @@ import android.widget.ImageView;
 
 
 import com.fhh.bihu.R;
+import com.fhh.bihu.adapter.QuestionListRvAdapter;
 import com.fhh.bihu.util.ApiParam;
 import com.fhh.bihu.util.HttpUtil;
 import com.fhh.bihu.util.ImageUtil;
 import com.fhh.bihu.util.MyApplication;
 import com.fhh.bihu.util.MyTextUtils;
+import com.fhh.bihu.util.SoftKeyBoardListener;
 import com.fhh.bihu.util.ToastUtil;
 
 import java.io.FileNotFoundException;
@@ -46,7 +50,7 @@ public class AskQuestionActivity extends BaseActivity {
     private EditText mContent;
     private TextInputLayout mTittleLayout;
 
-    private Button mCloseKeyborad;
+    private Button mCloseKeyboard;
     private Button mTakePhoto;
     private ImageView mCancelImage;
     private Button mOpenAlbum;
@@ -120,15 +124,29 @@ public class AskQuestionActivity extends BaseActivity {
             }
         });
 
-
-        mCloseKeyborad = findViewById(R.id.bt_down);
+        mCloseKeyboard = findViewById(R.id.bt_down);
         mTakePhoto = findViewById(R.id.bt_take_photo);
         mOpenAlbum = findViewById(R.id.bt_open_album);
         mCancelImage = findViewById(R.id.cancel_image);
         mAllImage = findViewById(R.id.question_image_all);
-        mAnswerImage = findViewById(R.id.answer_image);
-        //todo  关闭键盘
-        //mCloseKeyborad.setOnClickListener();
+        mAnswerImage = findViewById(R.id.question_image);
+
+
+        SoftKeyBoardListener.setListener(AskQuestionActivity.this,
+                new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+                    @Override
+                    public void keyBoardShow(int height) {
+                        mCloseKeyboard.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void keyBoardHide(int height) {
+                        mCloseKeyboard.setVisibility(View.GONE);
+                    }
+                });
+
+        // 关闭键盘
+        mCloseKeyboard.setOnClickListener(v -> hideKeyboard());
 
         mCancelImage.setOnClickListener(v -> {
             hasImage = false;
@@ -138,6 +156,7 @@ public class AskQuestionActivity extends BaseActivity {
         mOpenAlbum.setOnClickListener(v -> checkAlbumPermission());
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -161,6 +180,7 @@ public class AskQuestionActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                QuestionListActivity.actionStart(AskQuestionActivity.this);
                 finish();
                 break;
             case R.id.send:
@@ -191,8 +211,6 @@ public class AskQuestionActivity extends BaseActivity {
         if (!MyTextUtils.isEmpty(mTitle.getText().toString()) &&
                 !MyTextUtils.isEmpty(mContent.getText().toString())) {
             mTittleLayout.setErrorEnabled(false);
-            //TODO 实现上传图片
-            //TODO 实现上传图片
             String param;
             if (hasImage) {
                 param = "title=" + mTitle.getText().toString() +
@@ -206,6 +224,7 @@ public class AskQuestionActivity extends BaseActivity {
                 public void onResponse(HttpUtil.Response response) {
                     if (response.getInfo().equals("success")) {
                         ToastUtil.makeToast("发送成功");
+                        QuestionListActivity.actionStart(AskQuestionActivity.this);
                         finish();
                     } else {
                         ToastUtil.makeToast(response.getInfo());
@@ -245,6 +264,7 @@ public class AskQuestionActivity extends BaseActivity {
                         // preview icon according to exif orientation
                         Matrix matrix = new Matrix();
                         matrix.postRotate(90);
+                        mAnswerImage.setMaxHeight(80);
                         mAnswerImage.setImageBitmap(Bitmap.createBitmap(imageBitmap, 0, 0,
                                 imageBitmap.getWidth(), imageBitmap.getHeight(), matrix, true));
                         mAllImage.setVisibility(View.VISIBLE);
@@ -278,53 +298,14 @@ public class AskQuestionActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        QuestionListActivity.actionStart(AskQuestionActivity.this);
+    }
+
     public static void actionStart(Context context) {
         Intent intent = new Intent(context, AskQuestionActivity.class);
         context.startActivity(intent);
-    }
-
-
-    private String handleImageBeforeKitHat(Intent data) {
-        Uri uri = data.getData();
-        return getImagePath(uri, null);
-    }
-
-
-    @TargetApi(19)
-    private String handleImageOnKitHat(Intent data) {
-        String imagePath = null;
-        Uri uri = data.getData();
-        if (DocumentsContract.isDocumentUri(this, uri)) {
-            //如果是Document类型的uri,通过document id处理
-            String docId = DocumentsContract.getDocumentId(uri);
-            if ("com.android.providers.media.documents".equals(uri.getAuthority())) {
-                String id = docId.split(":")[1];//解析出数字格式的id
-                String selection = MediaStore.Images.Media._ID + "=" + id;
-                imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selection);
-            } else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())) {
-                Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads")
-                        , Long.valueOf(docId));
-                imagePath = getImagePath(contentUri, null);
-            }
-        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
-            //如果是content类型的uri 用普通方式的处理
-            imagePath = uri.getPath();
-        }
-
-        return imagePath;
-    }
-
-
-    private String getImagePath(Uri uri, String selection) {
-        String path = null;
-        Cursor cursor = getContentResolver().
-                query(uri, null, selection, null, null);
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-            }
-            cursor.close();
-        }
-        return path;
     }
 }

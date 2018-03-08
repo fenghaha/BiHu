@@ -22,6 +22,7 @@ import com.fhh.bihu.activity.AnswerListActivity;
 import com.fhh.bihu.activity.AnswerQuestionActivity;
 import com.fhh.bihu.entity.Question;
 import com.fhh.bihu.util.ApiParam;
+import com.fhh.bihu.util.DateUtil;
 import com.fhh.bihu.util.HttpUtil;
 import com.fhh.bihu.util.ImageUtil;
 import com.fhh.bihu.util.JsonParse;
@@ -139,6 +140,7 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 normalViewHolder.authorName.setText(question.getAuthorName());
                 Log.d(TAG, "position: " + position);
                 if (!MyTextUtils.isNull(question.getAuthorAvatarUrlString())) {
+
                     Log.d(TAG, "第 " + position + "用户名" + question.getAuthorName() + "头像不为空"
                             + "url=" + question.getAuthorAvatarUrlString());
                     HttpUtil.loadImage(question.getAuthorAvatarUrlString(),
@@ -147,6 +149,7 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                     normalViewHolder.avatar.setImageBitmap(bitmap);
                                 else normalViewHolder.avatar.setImageResource(R.drawable.nav_icon);
                             });
+
                 } else {
                     Log.d(TAG, "第 " + position + "用户名" + question.getAuthorName() + "头像为空");
                     normalViewHolder.avatar.setImageResource(R.drawable.nav_icon);
@@ -158,17 +161,18 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     HttpUtil.loadImage(url, (bitmap, info) -> {
                         if ("success".equals(info)) {
                             normalViewHolder.imagePre.setImageBitmap(bitmap);
+                            normalViewHolder.imagePre.setBackgroundResource(R.drawable.bg_dialog);
                             normalViewHolder.imagePre.setVisibility(View.VISIBLE);
                         } else normalViewHolder.imagePre.setVisibility(View.GONE);
                     });
-                }else {
+                } else {
                     normalViewHolder.imagePre.setVisibility(View.GONE);
                 }
 
                 normalViewHolder.content.setText(question.getContent());
                 // Log.d("getRecent", question.getRecent());
-                normalViewHolder.date.setText("发布于" + question.getDate());
-                normalViewHolder.updateTime.setText(question.getRecent() + "更新");
+                normalViewHolder.date.setText("发布于" + DateUtil.getTime(question.getDate()));
+                normalViewHolder.updateTime.setText(DateUtil.getTime(question.getRecent()) + "更新");
                 normalViewHolder.answerNum.setText(String.valueOf(question.getAnswerCount()));
                 normalViewHolder.excitingNum.setText(String.valueOf(question.getExcitingCount()));
                 normalViewHolder.naiveNum.setText(String.valueOf(question.getNaiveCount()));

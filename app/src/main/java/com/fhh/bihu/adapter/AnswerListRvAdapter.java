@@ -1,6 +1,8 @@
 package com.fhh.bihu.adapter;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 
@@ -17,6 +19,7 @@ import com.fhh.bihu.R;
 import com.fhh.bihu.entity.Answer;
 import com.fhh.bihu.entity.Question;
 import com.fhh.bihu.util.ApiParam;
+import com.fhh.bihu.util.DateUtil;
 import com.fhh.bihu.util.HttpUtil;
 import com.fhh.bihu.util.ImageUtil;
 import com.fhh.bihu.util.JsonParse;
@@ -127,10 +130,19 @@ public class AnswerListRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ImageView exciting;
         ImageView naive;
 
+        ScrollView allImage;
+
+        ImageView picture_1;
+        ImageView picture_2;
+        ImageView picture_3;
+        ImageView picture_4;
+        ImageView picture_0;
+        ArrayList<ImageView> imageViews;
+        ArrayList<String> imageUrls;
 
         NormalViewHolder(View itemView) {
             super(itemView);
-
+            imageViews = new ArrayList<>();
             authorName = itemView.findViewById(R.id.tv_answer_author_name);
             content = itemView.findViewById(R.id.tv_answer_content);
             excitingNum = itemView.findViewById(R.id.tv_answer_exciting_num);
@@ -140,6 +152,19 @@ public class AnswerListRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             avatar = itemView.findViewById(R.id.image_answer_avatar);
             exciting = itemView.findViewById(R.id.image_answer_exciting);
             naive = itemView.findViewById(R.id.image_answer_naive);
+
+            allImage = itemView.findViewById(R.id.scroll_answer_image_all);
+
+            picture_0 = itemView.findViewById(R.id.answer_image_1);
+            picture_1 = itemView.findViewById(R.id.answer_image_2);
+            picture_2 = itemView.findViewById(R.id.answer_image_3);
+            picture_3 = itemView.findViewById(R.id.answer_image_4);
+            picture_4 = itemView.findViewById(R.id.answer_image_5);
+            imageViews.add(picture_0);
+            imageViews.add(picture_1);
+            imageViews.add(picture_2);
+            imageViews.add(picture_3);
+            imageViews.add(picture_4);
         }
     }
 
@@ -154,8 +179,9 @@ public class AnswerListRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         switch (viewType) {
             case TYPE_NORMAL:
@@ -177,25 +203,48 @@ public class AnswerListRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
 
+    @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         switch (getItemViewType(position)) {
             case TYPE_NORMAL:
                 if (mAnswerList.size() > 0) {
                     Answer answer = mAnswerList.get(position - 1);
                     NormalViewHolder normalHolder = (NormalViewHolder) holder;
                     normalHolder.authorName.setText(answer.getAuthorName());
-                    normalHolder.date.setText(answer.getDate());
+                    normalHolder.date.setText("回答于" + DateUtil.getTime(answer.getDate()));
                     normalHolder.content.setText(answer.getContent());
                     normalHolder.excitingNum.setText(String.valueOf(answer.getExcitingCount()));
                     normalHolder.naiveNum.setText(String.valueOf(answer.getNaiveCount()));
+
                     if (!MyTextUtils.isNull(answer.getAuthorAvatarUrlString())) {
                         HttpUtil.loadImage(answer.getAuthorAvatarUrlString(), (bitmap, info) -> {
                             if ("success".equals(info))
-                           normalHolder.avatar.setImageBitmap(bitmap);
+                                normalHolder.avatar.setImageBitmap(bitmap);
                             else normalHolder.avatar.setImageResource(R.drawable.nav_icon);
                         });
                     }
+
+                    normalHolder.imageUrls = answer.getImageUrlStrings();
+
+                    if (normalHolder.imageUrls != null) {
+                        int size = normalHolder.imageUrls.size();
+                        Log.d("iiiii", "size = " + size);
+                        normalHolder.allImage.setVisibility(View.VISIBLE);
+                        for (int i = 0; i < size; i++) {
+                            int finalI = i;
+                            Log.d("iiiii", "i = " + i + "\n url=" + normalHolder.imageUrls.get(i));
+                            HttpUtil.loadImage(normalHolder.imageUrls.get(i),
+                                    (bitmap, info) -> {
+                                        if ("success".equals(info)) {
+                                            normalHolder.imageViews.get(finalI).setVisibility(View.VISIBLE);
+                                            normalHolder.imageViews.get(finalI).setImageBitmap(bitmap);
+                                        } else
+                                            normalHolder.imageViews.get(finalI).setVisibility(View.GONE);
+                                    });
+                        }
+                    }
+
                     if (answer.isExciting()) {
                         normalHolder.exciting.setImageResource(R.drawable.ic_exciting_clicked);
                     } else {
@@ -234,27 +283,26 @@ public class AnswerListRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
                 if (imageUrls != null) {
                     int size = imageUrls.size();
-                    Log.d("iiiii", "size = "+size);
+                    Log.d("iiiii", "size = " + size);
                     qHolder.allImage.setVisibility(View.VISIBLE);
                     for (int i = 0; i < size; i++) {
                         int finalI = i;
-                        Log.d("iiiii", "i = "+i+"\n url="+imageUrls.get(i));
+                        Log.d("iiiii", "i = " + i + "\n url=" + imageUrls.get(i));
                         HttpUtil.loadImage(imageUrls.get(i),
-                                (bitmap,info) -> {
-                                    if ("success".equals(info)){
+                                (bitmap, info) -> {
+                                    if ("success".equals(info)) {
                                         qHolder.imageViews.get(finalI).setVisibility(View.VISIBLE);
                                         qHolder.imageViews.get(finalI).setImageBitmap(bitmap);
-                                    }
-                                    else qHolder.imageViews.get(finalI).setVisibility(View.GONE);
+                                    } else qHolder.imageViews.get(finalI).setVisibility(View.GONE);
                                 });
                     }
                 }
 
                 qHolder.authorName.setText(question.getAuthorName());
-                qHolder.date.setText(question.getDate());
+                qHolder.date.setText("发布于"+DateUtil.getTime(question.getDate()));
                 qHolder.title.setText(question.getTitle());
                 qHolder.content.setText(question.getContent());
-                qHolder.updateTime.setText(question.getRecent() + "更新");
+                qHolder.updateTime.setText(DateUtil.getTime(question.getRecent()) + "更新");
                 qHolder.answerNum.setText(String.valueOf(question.getAnswerCount()));
                 qHolder.excitingNum.setText(String.valueOf(question.getExcitingCount()));
                 qHolder.naiveNum.setText(String.valueOf(question.getNaiveCount()));

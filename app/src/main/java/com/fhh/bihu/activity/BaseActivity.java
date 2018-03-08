@@ -2,6 +2,7 @@ package com.fhh.bihu.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.view.inputmethod.InputMethodManager;
 
 import com.fhh.bihu.util.MyApplication;
 import com.fhh.bihu.util.ToastUtil;
@@ -39,20 +41,21 @@ public class BaseActivity extends AppCompatActivity {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) != 0) {
             ActivityCompat.requestPermissions(BaseActivity.this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, OPEN_ALBUM);
-        }else {
+        } else {
             openAlbum();
         }
     }
-    void checkCameraPermission(){
+
+    void checkCameraPermission() {
         //判断相机权限
-        if(Build.VERSION.SDK_INT>=23){
-            if(ContextCompat.checkSelfPermission(BaseActivity.this,Manifest.permission.CAMERA)
-                    !=PackageManager.PERMISSION_GRANTED){
-                ActivityCompat.requestPermissions(BaseActivity.this,new String[]{Manifest.permission.CAMERA},TAKE_PHOTO);
-            }else{
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (ContextCompat.checkSelfPermission(BaseActivity.this, Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(BaseActivity.this, new String[]{Manifest.permission.CAMERA}, TAKE_PHOTO);
+            } else {
                 takePhoto();
             }
-        }else{
+        } else {
             takePhoto();
         }
     }
@@ -85,8 +88,17 @@ public class BaseActivity extends AppCompatActivity {
         startActivityForResult(intent, TAKE_PHOTO);
     }
 
+   void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) BaseActivity.this.
+                getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(BaseActivity.this.getWindow().
+                    getDecorView().getWindowToken(), 0);
+        }
 
-    public static int getExifOrientation(String filepath) {
+    }
+
+    int getExifOrientation(String filepath) {
         int degree = 0;
         ExifInterface exif = null;
 

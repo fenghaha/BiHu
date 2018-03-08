@@ -172,8 +172,8 @@ public class LoginActivity extends AppCompatActivity {
                                 //保存账号密码
                                 saveRememberAndAutoLogin();
                                 //跳转到MainActivity
-                                Intent intent = new Intent(LoginActivity.this, QuestionListActivity.class);
-                                startActivity(intent);
+                                QuestionListActivity.actionStart(LoginActivity.this);
+                                ToastUtil.makeToast("欢迎来到逼乎!");
                                 finish();
                             } else {
                                 ToastUtil.makeToast(response.getInfo());
