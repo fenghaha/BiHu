@@ -36,7 +36,7 @@
 + 修改密码<br>
 ![](readmePictures/修改密码.gif)
 
-+ 自动登录
++ 自动登录<br>
 ![](readmePictures/自动登录.gif)
 ## 开发者
 
