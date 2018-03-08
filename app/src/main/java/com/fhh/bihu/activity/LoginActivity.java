@@ -137,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
             editor.putString("password", mPassword.getText().toString());
             if (mAutoLogin.isChecked()) {
                 editor.putBoolean("auto_login", true);
-            }
+            }else editor.putBoolean("auto_login", false);
         } else {
             editor.clear();
         }
