@@ -1,8 +1,8 @@
-# 重邮红岩移动开发部Android学员17-18年寒假考核作业-逼乎
+# 重邮红岩移动Android学员寒假考核作业-逼乎
 
 ![](readmePictures/logo.png)<br>
 ## APP下载
-[点击下载]()
+[点我下载](https://raw.githubusercontent.com/fenghaha/BiHu/master/app/release/app-release.apk)
  
 ## 应用简介
 * 实现了*Jay68*提供的[逼乎api](https://github.com/jay68/bihu_web/wiki/%E9%80%BC%E4%B9%8EAPI%E6%96%87%E6%A1%A3) 所有接口  <br>
