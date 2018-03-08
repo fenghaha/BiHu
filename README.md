@@ -10,7 +10,7 @@
 
 ### 注册登陆
 
-![image]()
+![image](https://github.com/fenghaha/BiHu/blob/master/app/gifs/signup_and_login.gif)
 
 ### 更换头像
 
