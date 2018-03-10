@@ -13,6 +13,8 @@
     <style name="LoginTheme" parent="AppTheme">
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <!--使状态栏，导航栏可绘制-->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="colorAccent">@color/colorWhite</item>
         <item name="colorPrimary">@color/colorPrimary</item>
     </style>
@@ -20,5 +22,7 @@
     <style name="sendTheme" parent="AppTheme.Base">
         <item name="android:statusBarColor">@color/colorGray</item>
         <item name="colorAccent">@color/colorDarkerBlue</item>
+        <!--使状态栏，导航栏可绘制-->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 </resources>
