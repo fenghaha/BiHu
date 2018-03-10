@@ -5,26 +5,26 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_homepage"
-            android:title="主页"/>
+            android:title="@string/homepage"/>
         <item
             android:id="@+id/nav_favorite"
             android:icon="@drawable/ic_favorite"
-            android:title="收藏"/>
+            android:title="@string/favorite"/>
         <item
-            android:title="账户管理">
+            android:title="@string/account_manage">
             <menu>
                 <item
                     android:id="@+id/nav_avatar"
                     android:icon="@drawable/ic_avatar"
-                    android:title="修改头像"/>
+                    android:title="@string/change_avatar"/>
                 <item
                     android:id="@+id/nav_password"
-                    android:title="修改密码"
+                    android:title="@string/change_passwd"
                     android:icon="@drawable/ic_password"/>
                 <item
                     android:id="@+id/nav_logout"
                     android:icon="@drawable/ic_exit"
-                    android:title="退出登陆"/>
+                    android:title="@string/logout"/>
 
             </menu>
         </item>

@@ -12,5 +12,5 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:layout_margin="5dp"
-        android:text="没有更多了..." />
+        android:text="@string/no_more" />
 </LinearLayout>

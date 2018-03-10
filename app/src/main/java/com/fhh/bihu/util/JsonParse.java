@@ -51,7 +51,6 @@ public class JsonParse {
                 question.setId(one.getInt("id"));
                 question.setTitle(one.getString("title"));
                 question.setContent(one.getString("content"));
-                //TODO  图片处理
                 if (!MyTextUtils.isNull(one.getString("images"))) {
                     question.setImageUrlStrings(new ArrayList<>
                             (Arrays.asList(one.getString("images").split(","))));

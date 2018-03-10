@@ -40,7 +40,7 @@
                     android:id="@+id/input_account"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="账号(2 - 10个字符)"
+                    android:hint="@string/hint_account"
                     android:inputType="text"
                     android:textColor="#fff"
                     android:textColorHint="#fff"
@@ -57,7 +57,7 @@
                     android:id="@+id/input_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="密码 6-18位字符"
+                    android:hint="@string/hint_passwd"
                     android:inputType="textPassword"
                     android:textColor="#fff"
                     android:textColorHint="#fff" />
@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="60dp"
                 android:background="@color/colorDarkerBlue"
-                android:text="注        册"
+                android:text="@string/signup"
                 android:textColor="#fff"
                 android:textSize="18sp" />
 

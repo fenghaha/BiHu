@@ -40,7 +40,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
         android:background="@color/colorLightBlue"
-        android:text="选择头像" />
+        android:text="@string/choose_avatar" />
 
 
 </LinearLayout>

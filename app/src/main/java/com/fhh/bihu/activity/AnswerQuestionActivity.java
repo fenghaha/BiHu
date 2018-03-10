@@ -185,7 +185,6 @@ public class AnswerQuestionActivity extends BaseActivity {
         Log.d("回答问题", "回答一次");
         //内容不为空时 发送
         if (!MyTextUtils.isEmpty(mContent.getText().toString())) {
-            //TODO 实现上传图片
             String param;
             if (hasImage) {
                 param = "qid=" + question.getId()

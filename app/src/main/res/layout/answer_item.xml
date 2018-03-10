@@ -30,14 +30,16 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginEnd="10dp">
 
                 <com.fhh.bihu.view.RoundImageView
                     android:id="@+id/image_answer_avatar"
                     android:layout_width="55dp"
                     android:layout_height="55dp"
                     android:layout_marginRight="10dp"
-                    android:src="@drawable/nav_icon" />
+                    android:src="@drawable/nav_icon"
+                    android:layout_marginEnd="10dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -49,7 +51,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
-                        android:text="用户名"
                         android:textColor="#292828"
                         android:textSize="18sp" />
 
@@ -57,8 +58,7 @@
                         android:id="@+id/tv_answer_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:text="回答于 2018-02-28 23:10:51" />
+                        android:maxLines="1" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -73,7 +73,6 @@
                 android:layout_marginTop="10dp"
                 android:ellipsize="end"
                 android:gravity="start"
-                android:text="blablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablabla........."
                 android:textColor="#ec414141"
                 android:textSize="16sp" />
 
@@ -191,7 +190,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:singleLine="true"
-                            android:text="1"
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -212,7 +210,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:singleLine="true"
-                            android:text="5"
                             android:textSize="12sp" />
                     </LinearLayout>
 

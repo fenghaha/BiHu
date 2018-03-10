@@ -40,7 +40,7 @@
                 android:layout_height="280dp"
                 android:background="@null"
                 android:gravity="top|start"
-                android:hint="写回答"
+                android:hint="@string/hint_wite_answer"
                 android:maxLength="500"
                 android:padding="10dp"
                 android:textSize="16sp" />

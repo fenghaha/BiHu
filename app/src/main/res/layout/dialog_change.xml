@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:ignore="HardcodedText"
     android:background="#12ffffff">
 
 
@@ -38,7 +40,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:hint="请输入密码(6-18位字符)">
+                android:hint="@string/hint_passwd">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/first_edit"
@@ -53,7 +55,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:hint="请再次输入密码">
+                android:hint="@string/passwd_again">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/second_edit"
@@ -82,9 +84,10 @@
                     android:background="@null"
                     android:gravity="center"
                     android:singleLine="true"
-                    android:text="取消"
+                    android:text="@string/cancel"
                     android:textColor="#7D7D7D"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:layout_marginStart="10dp" />
 
                 <View
                     android:layout_width="1px"
@@ -100,9 +103,10 @@
                     android:background="@null"
                     android:gravity="center"
                     android:singleLine="true"
-                    android:text="确认"
+                    android:text="@string/sure"
                     android:textColor="#38ADFF"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:layout_marginEnd="10dp" />
             </LinearLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>
@@ -130,7 +134,7 @@
                 android:layout_gravity="top|center_horizontal"
                 android:layout_marginBottom="17dp"
                 android:gravity="top"
-                android:text="设置新头像"
+                android:text="@string/set_new_avatar"
                 android:textColor="#38ADFF"
                 android:textSize="16sp" />
 
@@ -155,7 +159,8 @@
                     android:singleLine="true"
                     android:text="拍照   "
                     android:textColor="#38ADFF"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                   />
 
                 <View
                     android:layout_width="match_parent"
