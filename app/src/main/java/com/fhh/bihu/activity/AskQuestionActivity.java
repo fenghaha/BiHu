@@ -180,7 +180,7 @@ public class AskQuestionActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                QuestionListActivity.actionStart(AskQuestionActivity.this);
+                setResult(RESULT_CANCELED);
                 finish();
                 break;
             case R.id.send:
@@ -224,7 +224,7 @@ public class AskQuestionActivity extends BaseActivity {
                 public void onResponse(HttpUtil.Response response) {
                     if (response.getInfo().equals("success")) {
                         ToastUtil.makeToast("发送成功");
-                        QuestionListActivity.actionStart(AskQuestionActivity.this);
+                        setResult(RESULT_OK);
                         finish();
                     } else {
                         ToastUtil.makeToast(response.getInfo());
@@ -301,11 +301,8 @@ public class AskQuestionActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        QuestionListActivity.actionStart(AskQuestionActivity.this);
+        setResult(RESULT_CANCELED);
+        finish();
     }
 
-    public static void actionStart(Context context) {
-        Intent intent = new Intent(context, AskQuestionActivity.class);
-        context.startActivity(intent);
-    }
 }

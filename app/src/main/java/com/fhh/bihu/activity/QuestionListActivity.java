@@ -51,6 +51,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class QuestionListActivity extends AppCompatActivity {
 
+    private boolean needRefresh = false;
 
     private List<Question> mQuestionList = new ArrayList<>();
 
@@ -62,23 +63,21 @@ public class QuestionListActivity extends AppCompatActivity {
     private MyDialog dialog;
     private CircleImageView avatar;
     private TextView mUsernameTv;
-    MyApplication application;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_list);
         setUpViews();
-        application = (MyApplication) getApplication();
         updateQuestions();
     }
 
     //刷新问题列表数据
     private void updateQuestions() {
-        Log.d("刷新时的token", "token = " + application.getToken());
+        Log.d("刷新时的token", "token = " + MyApplication.getToken());
         swipeRefresh.setRefreshing(true);
         HttpUtil.sendHttpRequest(ApiParam.GET_QUESTION_LIST, "page=0" + "&count=10"
-                        + "&token=" + application.getToken(),
+                        + "&token=" + MyApplication.getToken(),
                 new HttpUtil.HttpCallBack() {
 
                     @Override
@@ -127,9 +126,9 @@ public class QuestionListActivity extends AppCompatActivity {
         avatar = view.findViewById(R.id.nav_header_avatar);
 
 
-        mUsernameTv.setText( application.getUser().getUsername());
-        if (!MyTextUtils.isNull( application.getUser().getAvatarUrl())) {
-            HttpUtil.loadImage( application.getUser().getAvatarUrl(), (bitmap, info) -> {
+        mUsernameTv.setText(MyApplication.getUser().getUsername());
+        if (!MyTextUtils.isNull(MyApplication.getUser().getAvatarUrl())) {
+            HttpUtil.loadImage(MyApplication.getUser().getAvatarUrl(), (bitmap, info) -> {
                 if ("success".equals(info)) avatar.setImageBitmap(bitmap);
                 else avatar.setImageResource(R.drawable.nav_icon);
             });
@@ -174,8 +173,8 @@ public class QuestionListActivity extends AppCompatActivity {
         //设置悬浮按钮
         FloatingActionButton button = findViewById(R.id.fab_ask);
         button.setOnClickListener(v -> {
-            AskQuestionActivity.actionStart(QuestionListActivity.this);
-            finish();
+            Intent intent = new Intent(QuestionListActivity.this, AskQuestionActivity.class);
+            startActivityForResult(intent, 666);
         });
 
 
@@ -240,7 +239,7 @@ public class QuestionListActivity extends AppCompatActivity {
     }
 
     private void changePassword(String newPassword) {
-        String param = "password=" + newPassword + "&token=" + application.getToken();
+        String param = "password=" + newPassword + "&token=" + MyApplication.getToken();
         HttpUtil.sendHttpRequest(ApiParam.CHANGE_PASSWORD, param, new HttpUtil.HttpCallBack() {
             @Override
             public void onResponse(HttpUtil.Response response) {
@@ -251,7 +250,7 @@ public class QuestionListActivity extends AppCompatActivity {
                     //保存注册好的账号密码
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putBoolean("remember_password", true);
-                    editor.putString("account", application.getUser().getUsername());
+                    editor.putString("account", MyApplication.getUser().getUsername());
                     editor.putString("password", "");
                     editor.putBoolean("auto_login", false);
                     editor.apply();
@@ -271,8 +270,9 @@ public class QuestionListActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         navigationView.setCheckedItem(R.id.nav_home);
-        if (!MyTextUtils.isNull(application.getUser().getAvatarUrl())) {
-            HttpUtil.loadImage(application.getUser().getAvatarUrl(), (bitmap, info) -> {
+        if (needRefresh) updateQuestions();
+        if (!MyTextUtils.isNull(MyApplication.getUser().getAvatarUrl())) {
+            HttpUtil.loadImage(MyApplication.getUser().getAvatarUrl(), (bitmap, info) -> {
                 if ("success".equals(info)) avatar.setImageBitmap(bitmap);
                 else avatar.setImageResource(R.drawable.nav_icon);
             });
@@ -288,7 +288,21 @@ public class QuestionListActivity extends AppCompatActivity {
         }
         return true;
     }
-    public static void actionStart(Context context){
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case 666:
+                if (resultCode == RESULT_OK) {
+                    needRefresh = true;
+                } else if (resultCode == RESULT_CANCELED) {
+                    needRefresh = false;
+                }
+                break;
+        }
+    }
+
+    public static void actionStart(Context context) {
         Intent intent = new Intent(context, QuestionListActivity.class);
         context.startActivity(intent);
     }
