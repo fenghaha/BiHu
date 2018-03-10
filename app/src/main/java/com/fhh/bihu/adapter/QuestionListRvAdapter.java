@@ -29,6 +29,7 @@ import com.fhh.bihu.util.JsonParse;
 import com.fhh.bihu.util.MyApplication;
 import com.fhh.bihu.util.MyTextUtils;
 import com.fhh.bihu.util.ToastUtil;
+import com.fhh.bihu.view.RoundImageView;
 
 
 import java.util.List;
@@ -69,7 +70,7 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         LinearLayout forClick;
 
-        ImageView avatar;
+        RoundImageView avatar;
         ImageView comment;
         ImageView exciting;
         ImageView naive;

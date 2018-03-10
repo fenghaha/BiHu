@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 /**
  * Created by FengHaHa on 2018/3/1 0001.
+ * 回答实体类
  */
 
 public class Answer {

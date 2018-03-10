@@ -21,7 +21,7 @@
         app:titleTextColor="#000" />
 
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <com.fhh.bihu.view.RoundImageView
         android:id="@+id/avatar_for_change"
         android:layout_width="250dp"
         android:layout_height="250dp"

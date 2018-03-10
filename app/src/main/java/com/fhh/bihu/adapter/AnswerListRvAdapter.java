@@ -26,11 +26,11 @@ import com.fhh.bihu.util.JsonParse;
 import com.fhh.bihu.util.MyApplication;
 import com.fhh.bihu.util.MyTextUtils;
 import com.fhh.bihu.util.ToastUtil;
+import com.fhh.bihu.view.RoundImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 
 
 /**
@@ -69,7 +69,7 @@ public class AnswerListRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         ScrollView allImage;
 
-        CircleImageView avatar;
+        RoundImageView avatar;
         ImageView comment;
         ImageView exciting;
         ImageView naive;
@@ -126,7 +126,7 @@ public class AnswerListRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView naiveNum;
         TextView date;
 
-        ImageView avatar;
+        RoundImageView avatar;
         ImageView exciting;
         ImageView naive;
 

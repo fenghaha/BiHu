@@ -3,8 +3,6 @@ package com.fhh.bihu.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TextInputEditText;
@@ -19,12 +17,10 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.TextView;
 
 
@@ -33,20 +29,16 @@ import com.fhh.bihu.adapter.QuestionListRvAdapter;
 import com.fhh.bihu.entity.Question;
 import com.fhh.bihu.util.ApiParam;
 import com.fhh.bihu.util.HttpUtil;
-import com.fhh.bihu.util.ImageUtil;
 import com.fhh.bihu.util.JsonParse;
 import com.fhh.bihu.util.MyApplication;
 import com.fhh.bihu.util.MyTextUtils;
 import com.fhh.bihu.util.ToastUtil;
 import com.fhh.bihu.view.MyDialog;
-
-
-import org.w3c.dom.Text;
+import com.fhh.bihu.view.RoundImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class QuestionListActivity extends AppCompatActivity {
@@ -61,7 +53,7 @@ public class QuestionListActivity extends AppCompatActivity {
 
     private QuestionListRvAdapter adapter;
     private MyDialog dialog;
-    private CircleImageView avatar;
+    private RoundImageView avatar;
     private TextView mUsernameTv;
 
     @Override

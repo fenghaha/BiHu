@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_login_gradient"
+    android:background="@drawable/bg_welcome01"
     android:fitsSystemWindows="true">
 
 
@@ -95,7 +95,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:background="#05BDFE"
+                    android:background="#3b8fac"
                     android:text="登        录"
                     android:textColor="#fff"
                     android:textSize="18sp" />

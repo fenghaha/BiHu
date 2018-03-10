@@ -32,7 +32,7 @@
                 android:layout_marginTop="5dp"
                 android:orientation="horizontal">
 
-                <de.hdodenhof.circleimageview.CircleImageView
+                <com.fhh.bihu.view.RoundImageView
                     android:id="@+id/image_answer_avatar"
                     android:layout_width="55dp"
                     android:layout_height="55dp"

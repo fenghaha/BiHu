@@ -96,12 +96,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void setRememberAndAutoLogin() {
-
-
         pref = getSharedPreferences("account", Context.MODE_PRIVATE);
         isRemember = pref.getBoolean("remember_password", false);
         autoLogin = pref.getBoolean("auto_login", false);
-
         if (isRemember) {
             mAccount.setText(pref.getString("account", ""));
             mPassword.setText(pref.getString("password", ""));
@@ -113,10 +110,10 @@ public class LoginActivity extends AppCompatActivity {
     private void autoLogin() {
 
         mAutoLogin.setChecked(true);
-        ToastUtil.makeToast("2秒后将自动登录,现在取消还来得及哦!");
+        ToastUtil.makeToast("1秒后将自动登录,现在取消还来得及哦!");
         new Thread(() -> {
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1200);
                 runOnUiThread(() -> {
                     if (mAutoLogin.isChecked()) {
                         logIn();

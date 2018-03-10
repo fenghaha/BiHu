@@ -12,6 +12,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorWhite</item>
     </style>
+    <style name="NormalTheme" parent="AppTheme.Base"/>
     <style name="AppTheme" parent="AppTheme.Base" >
         <item name="colorAccent">@color/colorBlue</item>
     </style>

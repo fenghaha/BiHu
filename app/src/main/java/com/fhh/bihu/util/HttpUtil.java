@@ -1,7 +1,10 @@
 package com.fhh.bihu.util;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
 import android.util.Log;
 
@@ -39,6 +42,13 @@ public class HttpUtil {
 
     private static Handler handler;
 
+    private static boolean networkAvailable(){
+        ConnectivityManager connectivityManager = (ConnectivityManager)MyApplication.getContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = connectivityManager.getActiveNetworkInfo();
+        return  (info != null && info.isAvailable());
+    }
+
     public static void loadImage(String address, ImageCallback callback) {
         String imageName;
         Log.d(TAG, "原address=" + address);
@@ -63,39 +73,48 @@ public class HttpUtil {
         } else {
             Log.d(TAG, "文件不存在  name=" + imageName);
             //文件不存在则从网络中读取
-            String finalImageName = imageName;
-            new Thread(() -> {
-                HttpURLConnection connection;
-                try {
-                    URL mUrl = new URL(address);
-                    connection = (HttpURLConnection) mUrl.openConnection();
-                    connection.setRequestMethod("GET");
-                    connection.setReadTimeout(5000);
-                    connection.setConnectTimeout(8000);
-                    connection.setDoInput(true);
-                    connection.setUseCaches(false);//不缓存
-                    connection.connect();
+            //先检测网络
+            if (networkAvailable()){
+                String finalImageName = imageName;
+                new Thread(() -> {
+                    HttpURLConnection connection;
+                    try {
+                        URL mUrl = new URL(address);
+                        connection = (HttpURLConnection) mUrl.openConnection();
+                        connection.setRequestMethod("GET");
+                        connection.setReadTimeout(5000);
+                        connection.setConnectTimeout(8000);
+                        connection.setDoInput(true);
+                        connection.setUseCaches(false);//不缓存
+                        connection.connect();
 
-                    Log.d(TAG, "ResponseCod " + connection.getResponseCode());
+                        Log.d(TAG, "ResponseCod " + connection.getResponseCode());
 
-                    if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                        Bitmap bitmap = BitmapFactory.decodeStream(connection.getInputStream());
-                        handler.post(() -> callback.onResponse(bitmap, "success"));
-                        //缓存图片
-                        File file1 = new File(MyApplication.getContext().getExternalCacheDir() + "/" + finalImageName + ".png");
-                        FileOutputStream os = new FileOutputStream(file1);
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 70, os);
-                    } else {
-                        handler.post(() ->callback.onResponse(null,"failed"));
+                        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                            Bitmap bitmap = BitmapFactory.decodeStream(connection.getInputStream());
+                            handler.post(() -> callback.onResponse(bitmap, "success"));
+                            //缓存图片
+                            File file1 = new File(MyApplication.getContext().getExternalCacheDir() + "/" + finalImageName + ".png");
+                            FileOutputStream os = new FileOutputStream(file1);
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 70, os);
+                        } else {
+                            handler.post(() ->callback.onResponse(null,"failed"));
+                        }
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (ProtocolException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (ProtocolException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }).start();
+                }).start();
+            }else {
+                handler.post(() ->{
+                    callback.onResponse(null,"failed");
+                    ToastUtil.makeToast("网络不可用,请检查网络连接后再试");
+                });
+
+            }
         }
     }
 
@@ -104,66 +123,72 @@ public class HttpUtil {
         UploadManager uploadManager = new UploadManager(config);
         //据说把key放在代码不安全...
         //等我学会写服务器接口了再说吧2333
-        String param = "accessKey=gAeLEjccJb17Ygy13jT2HD98X9LOsSOjTgKbMNE8"
-                + "&secretKey=vpgfLqXMu7NuGgssvNXB6und8j2BAvdSMfzIr89L"
-                + "&bucket=fhh-123";
-        sendHttpRequest(ApiParam.GET_TOKEN, param, new HttpCallBack() {
-            @Override
-            public void onResponse(Response response) {
-                if (response.getInfo().equals("success")) {
-                    String token = JsonParse.getElement(new String(response.getBytes()), "token");
-                    uploadManager.put(filePath, name, token, upCompletionHandler, null);
-                } else {
-                    ToastUtil.makeToast(response.getInfo());
+        if (networkAvailable()){
+            String param = "accessKey=gAeLEjccJb17Ygy13jT2HD98X9LOsSOjTgKbMNE8"
+                    + "&secretKey=vpgfLqXMu7NuGgssvNXB6und8j2BAvdSMfzIr89L"
+                    + "&bucket=fhh-123";
+            sendHttpRequest(ApiParam.GET_TOKEN, param, new HttpCallBack() {
+                @Override
+                public void onResponse(Response response) {
+                    if (response.getInfo().equals("success")) {
+                        String token = JsonParse.getElement(new String(response.getBytes()), "token");
+                        uploadManager.put(filePath, name, token, upCompletionHandler, null);
+                    } else {
+                        ToastUtil.makeToast(response.getInfo());
+                    }
                 }
-            }
 
-            @Override
-            public void onFail(String reason) {
-                ToastUtil.makeToast("获取七牛token失败");
-            }
-        });
+                @Override
+                public void onFail(String reason) {
+                    ToastUtil.makeToast("获取七牛token失败");
+                }
+            });
+        }else {
+            handler.post(() -> ToastUtil.makeToast("网络不可用,请检查网络连接后再试"));
+        }
 
     }
 
     public static void sendHttpRequest(String url, String param, HttpCallBack callBack) {
-
         handler = new Handler();
-        //把开启新线程的操作封装在网络请求里
-        new Thread(() -> {
-            HttpURLConnection connection = null;
-            //Log.d(TAG, "网络请求");
-            try {
-                URL mUrl = new URL(url);
-                connection = (HttpURLConnection) mUrl.openConnection();
-                connection.setRequestMethod("POST");
-                connection.setReadTimeout(5000);
-                connection.setConnectTimeout(8000);
-                connection.setDoOutput(true);
-                OutputStream os = connection.getOutputStream();
-                os.write(param.getBytes());
-                os.flush();
-                os.close();
-                int responseCode = connection.getResponseCode();
-                Log.d("ResponseCode", "ResponseCode = " + responseCode);
-                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                    Response response = new Response(getByteArrayFromIS(connection.getInputStream()));
-                    // Log.d(TAG, "info = " + response.getInfo() + "status = " + response.getStatus());
-                    handler.post(() -> callBack.onResponse(response));
-                } else {
-                    handler.post(() -> {
-                        ToastUtil.makeToast("服务器连接错误 responseCode = " + responseCode);
-                        callBack.onFail("网络");
-                    });
+        if (networkAvailable()){
+            //把开启新线程的操作封装在网络请求里
+            new Thread(() -> {
+                HttpURLConnection connection = null;
+                //Log.d(TAG, "网络请求");
+                try {
+                    URL mUrl = new URL(url);
+                    connection = (HttpURLConnection) mUrl.openConnection();
+                    connection.setRequestMethod("POST");
+                    connection.setReadTimeout(5000);
+                    connection.setConnectTimeout(8000);
+                    connection.setDoOutput(true);
+                    OutputStream os = connection.getOutputStream();
+                    os.write(param.getBytes());
+                    os.flush();
+                    os.close();
+                    int responseCode = connection.getResponseCode();
+                    Log.d("ResponseCode", "ResponseCode = " + responseCode);
+                    if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                        Response response = new Response(getByteArrayFromIS(connection.getInputStream()));
+                        // Log.d(TAG, "info = " + response.getInfo() + "status = " + response.getStatus());
+                        handler.post(() -> callBack.onResponse(response));
+                    } else {
+                        handler.post(() -> {
+                            ToastUtil.makeToast("服务器连接错误 responseCode = " + responseCode);
+                            callBack.onFail("网络");
+                        });
+                    }
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
-
-
+            }).start();
+        }else {
+            callBack.onFail("网络");
+            handler.post(() -> ToastUtil.makeToast("网络不可用,请检查网络连接后再试"));
+        }
     }
 
     private static byte[] getByteArrayFromIS(InputStream is) throws IOException {
