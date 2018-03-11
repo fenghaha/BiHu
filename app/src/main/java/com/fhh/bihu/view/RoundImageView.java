@@ -47,9 +47,7 @@ public class RoundImageView extends android.support.v7.widget.AppCompatImageView
 //        paint.setAntiAlias(true);
 //        int clearBits = 0;
 //        int setBits = Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG;
-//        pfdf = new PaintFlagsDrawFilter(clearBits, setBits);
-//        //由于imageview有默认底色,如黑色,设置背景为透明是为了第一次setImageBitmap时不显示圆以外方型的默认背景色
-//        //但是这样在中兴nubia手机上还会首先显示正方形黑色背景,然后才变圆(解决办法,先裁成圆再setImageBitmap)
+//        pfdf = new PaintFlagsDrawFilter(clearBits, setBits)
 //        setBackgroundColor(context.getResources().getColor(android.R.color.transparent));
 //    }
 
