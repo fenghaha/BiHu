@@ -69,7 +69,10 @@ public class LoginActivity extends AppCompatActivity {
 
         initListener();
 
-        loginButton.setOnClickListener(v -> logIn());
+        loginButton.setOnClickListener(v -> {
+            logIn();
+            loginButton.setClickable(false);
+        });
 
 
     }

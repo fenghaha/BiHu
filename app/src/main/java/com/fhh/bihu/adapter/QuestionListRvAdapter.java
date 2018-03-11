@@ -1,17 +1,12 @@
 package com.fhh.bihu.adapter;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NavUtils;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -448,7 +443,7 @@ public class QuestionListRvAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         HttpUtil.sendHttpRequest(url, param, new HttpUtil.HttpCallBack() {
             @Override
             public void onResponse(HttpUtil.Response response) {
-                Log.d("DATAonResponse: ", "onResponse: " + response.getData() + "que:" + JsonParse.getElement(response.getData(), "questions"));
+                //Log.d("DATAonResponse: ", "onResponse: " + response.getData() + "que:" + JsonParse.getElement(response.getData(), "questions"));
                 if (response.getInfo().equals("success")) {
                     if (mQuestionList.size() == Integer.parseInt(JsonParse.getElement
                             (response.getData(), "totalCount"))) {
