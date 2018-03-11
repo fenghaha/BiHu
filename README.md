@@ -2,7 +2,7 @@
 
 ![](readmePictures/logo.png)<br>
 ## APP下载
-[点我下载](https://raw.githubusercontent.com/fenghaha/BiHu/master/app/release/app-release.apk)
+[点我下载](http://www.fenghaha.xyz:8080/bihu.apk)
  
 ## 应用简介
 * 实现了*Jay68*提供的[逼乎api](https://github.com/jay68/bihu_web/wiki/%E9%80%BC%E4%B9%8EAPI%E6%96%87%E6%A1%A3) 所有接口  <br>
